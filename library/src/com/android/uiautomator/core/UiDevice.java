@@ -168,10 +168,7 @@ public class UiDevice {
      * @return true if successful, else return false
      */
     public boolean pressMenu() {
-        waitForIdle();
-        return mUiAutomationBridge.getInteractionController().sendKeyAndWaitForEvent(
-                KeyEvent.KEYCODE_MENU, 0, AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED,
-                KEY_PRESS_EVENT_TIMEOUT);
+        return pressKeyCode(KeyEvent.KEYCODE_MENU);
     }
 
     /**
