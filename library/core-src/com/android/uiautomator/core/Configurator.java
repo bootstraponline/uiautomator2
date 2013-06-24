@@ -16,14 +16,10 @@
 package com.android.uiautomator.core;
 
 /**
- * Allows you to set key parameters for running uiautomator tests. The new
- * settings take effect immediately and can be changed any time during a test run.
+ * The Configurator allows for modification of some key framework parameters.
+ * New settings take effect immediately and can be changed any time during a test run.
  *
- * To modify parameters using Configurator, first obtain an instance by calling
- * {@link #getInstance()}. As a best practice, make sure you always save
- * the original value of any parameter that you are modifying. After running your
- * tests with the modified parameters, make sure to also restore
- * the original parameter values, otherwise this will impact other tests cases.
+ * Can be obtained by calling {@link #getInstance()}
  * @since API Level 18
  */
 public final class Configurator {
@@ -46,7 +42,7 @@ public final class Configurator {
     }
 
     /**
-     * Retrieves a singleton instance of Configurator.
+     * Retrieves a singleton instance of Configurator
      *
      * @return Configurator instance
      * @since API Level 18
@@ -59,15 +55,11 @@ public final class Configurator {
     }
 
     /**
-     * Sets the timeout for waiting for the user interface to go into an idle
-     * state before starting a uiautomator action.
+     * Sets the timeout used to wait for user interface idle before an automation action.
      *
-     * By default, all core uiautomator objects except {@link UiDevice} will perform
-     * this wait before starting to search for the widget specified by the
-     * object's {@link UiSelector}. Once the idle state is detected or the
-     * timeout elapses (whichever occurs first), the object will start to wait
-     * for the selector to find a match.
-     * See {@link #setWaitForSelectorTimeout(long)}
+     * All automation APIs, except {@link UiDevice}, perform this wait for idle before looking for
+     * the widget specified by the object's {@link UiSelector}. Once idle is detected, a
+     * wait for selector will begin. See {@link #setWaitForSelectorTimeout(long)}
      *
      * @param timeout Timeout value in milliseconds
      * @return self
@@ -79,17 +71,13 @@ public final class Configurator {
     }
 
     /**
-     * Gets the current timeout used for waiting for the user interface to go
-     * into an idle state.
+     * Gets the timeout used to wait for user interface idle before an automation action.
      *
-     * By default, all core uiautomator objects except {@link UiDevice} will perform
-     * this wait before starting to search for the widget specified by the
-     * object's {@link UiSelector}. Once the idle state is detected or the
-     * timeout elapses (whichever occurs first), the object will start to wait
-     * for the selector to find a match.
-     * See {@link #setWaitForSelectorTimeout(long)}
+     * All automation APIs, except {@link UiDevice}, perform this wait for idle before looking for
+     * the widget specified by the object's {@link UiSelector}. Once idle is detected, a
+     * wait for selector will begin. See {@link #setWaitForSelectorTimeout(long)}
      *
-     * @return Current timeout value in milliseconds
+     * @return current timeout in milliseconds
      * @since API Level 18
      */
     public long getWaitForIdleTimeout() {
@@ -97,13 +85,12 @@ public final class Configurator {
     }
 
     /**
-     * Sets the timeout for waiting for a widget to become visible in the user
-     * interface so that it can be matched by a selector.
+     * Sets the timeout used to wait for a widget matching a selector to become visible
+     * in user interface.
      *
-     * Because user interface content is dynamic, sometimes a widget may not
-     * be visible immediately and won't be detected by a selector. This timeout
-     * allows the uiautomator framework to wait for a match to be found, up until
-     * the timeout elapses.
+     * The user interface content is dynamic and sometimes the specific widget to be
+     * automated may not yet be visible. This wait allows the framework to keep looking
+     * for a matching widget to the object's {@link UiSelector}, up until the timeout.
      *
      * @param timeout Timeout value in milliseconds.
      * @return self
@@ -115,15 +102,14 @@ public final class Configurator {
     }
 
     /**
-     * Gets the current timeout for waiting for a widget to become visible in
-     * the user interface so that it can be matched by a selector.
+     * Gets the timeout used to wait for a widget matching a selector to become visible
+     * in user interface.
      *
-     * Because user interface content is dynamic, sometimes a widget may not
-     * be visible immediately and won't be detected by a selector. This timeout
-     * allows the uiautomator framework to wait for a match to be found, up until
-     * the timeout elapses.
+     * The user interface content is dynamic and sometimes the specific widget to be
+     * automated, may not yet be visible. This wait allows the framework to keep looking
+     * for a matching widget to the object's {@link UiSelector}, up until the timeout.
      *
-     * @return Current timeout value in milliseconds
+     * @return current timeout in milliseconds
      * @since API Level 18
      */
     public long getWaitForSelectorTimeout() {
@@ -131,13 +117,13 @@ public final class Configurator {
     }
 
     /**
-     * Sets the timeout for waiting for an acknowledgement of an
-     * uiautomtor scroll swipe action.
+     * Sets the timeout used to wait for acknowledgment events caused by automation scroll
+     * swipe action.
      *
-     * The acknowledgment is an <a href="http://developer.android.com/reference/android/view/accessibility/AccessibilityEvent.html">AccessibilityEvent</a>,
-     * corresponding to the scroll action, that lets the framework determine if
-     * the scroll action was successful. Generally, this timeout should not be modified.
-     * See {@link UiScrollable}
+     * The acknowledgment event is an accessibility event, corresponding to the scroll action.
+     * This acknowledgment helps the framework determine if the requested action was successful.
+     * Changing this timeout value should only be made in very rare cases and in general use,
+     * should not be modified.
      *
      * @param timeout Timeout value in milliseconds
      * @return self
@@ -149,13 +135,13 @@ public final class Configurator {
     }
 
     /**
-     * Gets the timeout for waiting for an acknowledgement of an
-     * uiautomtor scroll swipe action.
+     * Gets the timeout used to wait for acknowledgment events caused by automation scroll
+     * swipe action.
      *
-     * The acknowledgment is an <a href="http://developer.android.com/reference/android/view/accessibility/AccessibilityEvent.html">AccessibilityEvent</a>,
-     * corresponding to the scroll action, that lets the framework determine if
-     * the scroll action was successful. Generally, this timeout should not be modified.
-     * See {@link UiScrollable}
+     * The acknowledgment event is an accessibility event, corresponding to the scroll action.
+     * This acknowledgment helps the framework determine if the requested action was successful.
+     * Changing this timeout value should only be made in very rare cases and in general use,
+     * should not be modified.
      *
      * @return current timeout in milliseconds
      * @since API Level 18
@@ -165,13 +151,13 @@ public final class Configurator {
     }
 
     /**
-     * Sets the timeout for waiting for an acknowledgment of generic uiautomator
-     * actions, such as clicks, text setting, and menu presses.
+     * Sets the timeout used to wait for acknowledgment events caused by generic automation
+     * actions such as clicks, setText, pressMenu etc...
      *
-     * The acknowledgment is an <a href="http://developer.android.com/reference/android/view/accessibility/AccessibilityEvent.html">AccessibilityEvent</a>,
-     * corresponding to an action, that lets the framework determine if the
-     * action was successful. Generally, this timeout should not be modified.
-     * See {@link UiObject}
+     * The acknowledgment event is an accessibility event, corresponding to an action, that the
+     * framework looks for after an action is performed. This acknowledgment helps the
+     * framework determine if the requested action was successful. Changing this timeout
+     * value should only be made in very rare cases and in general use, should not be modified.
      *
      * @param timeout Timeout value in milliseconds
      * @return self
@@ -183,13 +169,13 @@ public final class Configurator {
     }
 
     /**
-     * Gets the current timeout for waiting for an acknowledgment of generic
-     * uiautomator actions, such as clicks, text setting, and menu presses.
+     * Gets the timeout used to wait for acknowledgment events caused by generic automation
+     * actions such as clicks, setText, pressMenu etc...
      *
-     * The acknowledgment is an <a href="http://developer.android.com/reference/android/view/accessibility/AccessibilityEvent.html">AccessibilityEvent</a>,
-     * corresponding to an action, that lets the framework determine if the
-     * action was successful. Generally, this timeout should not be modified.
-     * See {@link UiObject}
+     * The acknowledgment event is an accessibility event, corresponding to an action, that the
+     * framework looks for after an action is performed. This acknowledgment helps the
+     * framework determine if the requested action was successful. Changing this timeout
+     * value should only be made in very rare cases and in general use, should not be modified.
      *
      * @return current timeout in milliseconds
      * @since API Level 18
@@ -199,8 +185,7 @@ public final class Configurator {
     }
 
     /**
-     * Sets a delay between key presses when injecting text input.
-     * See {@link UiObject#setText(String)}
+     * Sets a delay between key presses when sending text.
      *
      * @param delay Delay value in milliseconds
      * @return self
@@ -212,8 +197,7 @@ public final class Configurator {
     }
 
     /**
-     * Gets the current delay between key presses when injecting text input.
-     * See {@link UiObject#setText(String)}
+     * Gets the delay between key presses when sending text.
      *
      * @return current delay in milliseconds
      * @since API Level 18

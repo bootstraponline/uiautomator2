@@ -90,14 +90,13 @@ public class UiDevice {
     }
 
     /**
-     * Enables or disables layout hierarchy compression.
+     * Enabled or disabled the compressed layout hierarchy
      *
-     * If compression is enabled, the layout hierarchy derived from the Acessibility
-     * framework will only contain nodes that are important for uiautomator
-     * testing. Any unnecessary surrounding layout nodes that make viewing
-     * and searching the hierarchy inefficient are removed.
+     * Enabling the compressed layout hierarchy, limits the layout hierarchy returned
+     * by accessibility, only to the important nodes to automation, removing unnecessary
+     * surrounding layout nodes that make viewing and searching the hierarchy inefficient.
      *
-     * @param compressed true to enable compression; else, false to disable
+     * @param compressed is true to enabled else false to disable
      * @since API Level 18
      */
     public void setCompressedLayoutHeirarchy(boolean compressed) {
@@ -344,7 +343,7 @@ public class UiDevice {
     }
 
     /**
-     * Opens the notification shade.
+     * Opens the notification shade
      *
      * @return true if successful, else return false
      * @since API Level 18
@@ -356,7 +355,7 @@ public class UiDevice {
     }
 
     /**
-     * Opens the Quick Settings shade.
+     * Opens the quick settings shade
      *
      * @return true if successful, else return false
      * @since API Level 18
@@ -431,18 +430,16 @@ public class UiDevice {
     }
 
     /**
-     * Performs a swipe from one coordinate to another coordinate. You can control
-     * the smoothness and speed of the swipe by specifying the number of steps.
-     * Each step execution is throttled to 5 milliseconds per step, so for a 100
-     * steps, the swipe will take around 0.5 seconds to complete.
+     * Performs a swipe from one coordinate to another using the number of steps
+     * to determine smoothness and speed. Each step execution is throttled to 5ms
+     * per step. So for a 100 steps, the swipe will take about 1/2 second to complete.
      *
-     * @param startX X-axis value for the starting coordinate
-     * @param startY Y-axis value for the starting coordinate
-     * @param endX X-axis value for the ending coordinate
-     * @param endY Y-axis value for the ending coordinate
-     * @param steps is the number of steps for the swipe action
-     * @return true if swipe is performed, false if the operation fails 
-     * or the coordinates are invalid
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @param steps is the number of move steps sent to the system
+     * @return false if the operation fails or the coordinates are invalid
      * @since API Level 18
      */
     public boolean drag(int startX, int startY, int endX, int endY, int steps) {
