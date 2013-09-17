@@ -14,12 +14,4 @@
 # limitations under the License.
 #
 
-# don't build uiautomator in unbundled env
-ifndef TARGET_BUILD_APPS
 include $(call all-subdir-makefiles)
-else
-ifneq ($(filter uiautomator,$(TARGET_BUILD_APPS)),)
-# used by the platform apps build.
-include $(call all-subdir-makefiles)
-endif
-endif
