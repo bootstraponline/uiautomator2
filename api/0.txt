@@ -1,5 +1,19 @@
 package com.android.uiautomator.core {
 
+  public final class Configurator {
+    method public long getActionAcknowledgmentTimeout();
+    method public static com.android.uiautomator.core.Configurator getInstance();
+    method public long getKeyInjectionDelay();
+    method public long getScrollAcknowledgmentTimeout();
+    method public long getWaitForIdleTimeout();
+    method public long getWaitForSelectorTimeout();
+    method public com.android.uiautomator.core.Configurator setActionAcknowledgmentTimeout(long);
+    method public com.android.uiautomator.core.Configurator setKeyInjectionDelay(long);
+    method public com.android.uiautomator.core.Configurator setScrollAcknowledgmentTimeout(long);
+    method public com.android.uiautomator.core.Configurator setWaitForIdleTimeout(long);
+    method public com.android.uiautomator.core.Configurator setWaitForSelectorTimeout(long);
+  }
+
   public class UiCollection extends com.android.uiautomator.core.UiObject {
     ctor public UiCollection(com.android.uiautomator.core.UiSelector);
     method public com.android.uiautomator.core.UiObject getChildByDescription(com.android.uiautomator.core.UiSelector, java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
@@ -11,12 +25,14 @@ package com.android.uiautomator.core {
   public class UiDevice {
     method public void clearLastTraversedText();
     method public boolean click(int, int);
+    method public boolean drag(int, int, int, int, int);
     method public void dumpWindowHierarchy(java.lang.String);
     method public void freezeRotation() throws android.os.RemoteException;
     method public deprecated java.lang.String getCurrentActivityName();
     method public java.lang.String getCurrentPackageName();
     method public int getDisplayHeight();
     method public int getDisplayRotation();
+    method public android.graphics.Point getDisplaySizeDp();
     method public int getDisplayWidth();
     method public static com.android.uiautomator.core.UiDevice getInstance();
     method public java.lang.String getLastTraversedText();
@@ -25,6 +41,8 @@ package com.android.uiautomator.core {
     method public boolean hasWatcherTriggered(java.lang.String);
     method public boolean isNaturalOrientation();
     method public boolean isScreenOn() throws android.os.RemoteException;
+    method public boolean openNotification();
+    method public boolean openQuickSettings();
     method public boolean pressBack();
     method public boolean pressDPadCenter();
     method public boolean pressDPadDown();
@@ -43,6 +61,7 @@ package com.android.uiautomator.core {
     method public void removeWatcher(java.lang.String);
     method public void resetWatcherTriggers();
     method public void runWatchers();
+    method public void setCompressedLayoutHeirarchy(boolean);
     method public void setOrientationLeft() throws android.os.RemoteException;
     method public void setOrientationNatural() throws android.os.RemoteException;
     method public void setOrientationRight() throws android.os.RemoteException;
@@ -66,11 +85,14 @@ package com.android.uiautomator.core {
     method public boolean clickAndWaitForNewWindow(long) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean clickBottomRight() throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean clickTopLeft() throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public boolean dragTo(com.android.uiautomator.core.UiObject, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public boolean dragTo(int, int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean exists();
     method protected android.view.accessibility.AccessibilityNodeInfo findAccessibilityNodeInfo(long);
     method public android.graphics.Rect getBounds() throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public com.android.uiautomator.core.UiObject getChild(com.android.uiautomator.core.UiSelector) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public int getChildCount() throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public java.lang.String getClassName() throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public java.lang.String getContentDescription() throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public com.android.uiautomator.core.UiObject getFromParent(com.android.uiautomator.core.UiSelector) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public java.lang.String getPackageName() throws com.android.uiautomator.core.UiObjectNotFoundException;
@@ -89,6 +111,10 @@ package com.android.uiautomator.core {
     method public boolean longClick() throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean longClickBottomRight() throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean longClickTopLeft() throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public boolean performMultiPointerGesture(android.view.MotionEvent.PointerCoords...);
+    method public boolean performTwoPointerGesture(android.graphics.Point, android.graphics.Point, android.graphics.Point, android.graphics.Point, int);
+    method public boolean pinchIn(int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public boolean pinchOut(int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean setText(java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean swipeDown(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean swipeLeft(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
@@ -96,10 +122,11 @@ package com.android.uiautomator.core {
     method public boolean swipeUp(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
     method public boolean waitForExists(long);
     method public boolean waitUntilGone(long);
+    field protected static final int FINGER_TOUCH_HALF_WIDTH = 20; // 0x14
     field protected static final int SWIPE_MARGIN_LIMIT = 5; // 0x5
-    field protected static final long WAIT_FOR_EVENT_TMEOUT = 3000L; // 0xbb8L
+    field protected static final deprecated long WAIT_FOR_EVENT_TMEOUT = 3000L; // 0xbb8L
     field protected static final long WAIT_FOR_SELECTOR_POLL = 1000L; // 0x3e8L
-    field protected static final long WAIT_FOR_SELECTOR_TIMEOUT = 10000L; // 0x2710L
+    field protected static final deprecated long WAIT_FOR_SELECTOR_TIMEOUT = 10000L; // 0x2710L
     field protected static final long WAIT_FOR_WINDOW_TMEOUT = 5500L; // 0x157cL
   }
 
@@ -140,6 +167,7 @@ package com.android.uiautomator.core {
 
   public class UiSelector {
     ctor public UiSelector();
+    method public com.android.uiautomator.core.UiSelector checkable(boolean);
     method public com.android.uiautomator.core.UiSelector checked(boolean);
     method public com.android.uiautomator.core.UiSelector childSelector(com.android.uiautomator.core.UiSelector);
     method public com.android.uiautomator.core.UiSelector className(java.lang.String);
@@ -160,6 +188,8 @@ package com.android.uiautomator.core {
     method public com.android.uiautomator.core.UiSelector longClickable(boolean);
     method public com.android.uiautomator.core.UiSelector packageName(java.lang.String);
     method public com.android.uiautomator.core.UiSelector packageNameMatches(java.lang.String);
+    method public com.android.uiautomator.core.UiSelector resourceId(java.lang.String);
+    method public com.android.uiautomator.core.UiSelector resourceIdMatches(java.lang.String);
     method public com.android.uiautomator.core.UiSelector scrollable(boolean);
     method public com.android.uiautomator.core.UiSelector selected(boolean);
     method public com.android.uiautomator.core.UiSelector text(java.lang.String);
@@ -180,9 +210,13 @@ package com.android.uiautomator.testrunner {
     method public abstract void sendStatus(int, android.os.Bundle);
   }
 
-  public class UiAutomatorTestCase extends junit.framework.TestCase {
+  public class UiAutomatorInstrumentationTestRunner extends android.test.InstrumentationTestRunner {
+    ctor public UiAutomatorInstrumentationTestRunner();
+  }
+
+  public class UiAutomatorTestCase extends android.test.InstrumentationTestCase {
     ctor public UiAutomatorTestCase();
-    method public com.android.uiautomator.testrunner.IAutomationSupport getAutomationSupport();
+    method public deprecated com.android.uiautomator.testrunner.IAutomationSupport getAutomationSupport();
     method public android.os.Bundle getParams();
     method public com.android.uiautomator.core.UiDevice getUiDevice();
     method public void sleep(long);
