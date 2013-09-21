@@ -18,7 +18,6 @@ LOCAL_PATH:= $(call my-dir)
 
 uiautomator.core_src_files := $(call all-java-files-under, testrunner) \
     $(call all-java-files-under, core)
-#uiautomator.core_java_libraries := android.test.runner core-junit
 
 uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/uiautomator_api.txt
 
@@ -26,7 +25,6 @@ uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/ui
 # Build core library
 include $(CLEAR_VARS)
 
-#LOCAL_MODULE_TAGS := tests
 LOCAL_SRC_FILES := $(uiautomator.core_src_files)
 LOCAL_MODULE := uiautomator
 LOCAL_SDK_VERSION := current
@@ -40,7 +38,6 @@ include $(BUILD_STATIC_JAVA_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(uiautomator.core_src_files)
 LOCAL_SDK_VERSION := current
-#LOCAL_JAVA_LIBRARIES := $(uiautomator.core_java_libraries)
 LOCAL_MODULE_CLASS := JAVA_LIBRARIES
 LOCAL_DROIDDOC_SOURCE_PATH := $(LOCAL_PATH)/core \
 	$(LOCAL_PATH)/testrunner
@@ -66,7 +63,6 @@ $(uiautomator_internal_api_file) : $(full_target)
 include $(CLEAR_VARS)
 LOCAL_MODULE := android_uiautomator
 LOCAL_SDK_VERSION := current
-#LOCAL_JAVA_LIBRARIES := $(uiautomator.core_java_libraries)
 LOCAL_SOURCE_FILES_ALL_GENERATED := true
 include $(BUILD_STATIC_JAVA_LIBRARY)
 # Make sure to run droiddoc first to generate the stub source files.
