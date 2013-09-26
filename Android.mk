@@ -40,6 +40,8 @@ LOCAL_GENERATED_SOURCES += $(gen)
 
 
 include $(BUILD_STATIC_JAVA_LIBRARY)
+# establish dependency on apicheck
+uiautomator_library := $(LOCAL_BUILT_MODULE)
 ###############################################
 
 
@@ -48,36 +50,19 @@ include $(BUILD_STATIC_JAVA_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(uiautomator.core_src_files)
 LOCAL_SDK_VERSION := current
-LOCAL_MODULE_CLASS := JAVA_LIBRARIES
-LOCAL_DROIDDOC_SOURCE_PATH := $(LOCAL_PATH)/core \
-	$(LOCAL_PATH)/testrunner
+LOCAL_MODULE_CLASS := DOCS
 LOCAL_DROIDDOC_HTML_DIR :=
-
 LOCAL_DROIDDOC_OPTIONS:= \
-    -stubs $(TARGET_OUT_COMMON_INTERMEDIATES)/JAVA_LIBRARIES/android_uiautomator_intermediates/src \
     -stubpackages com.android.uiautomator.core:com.android.uiautomator.testrunner \
     -api $(uiautomator_internal_api_file)
-
 LOCAL_DROIDDOC_CUSTOM_TEMPLATE_DIR := build/tools/droiddoc/templates-sdk
-LOCAL_UNINSTALLABLE_MODULE := true
 
-LOCAL_MODULE := uiautomator-stubs
+LOCAL_MODULE := uiautomator-docs
 
 include $(BUILD_DROIDDOC)
 
 uiautomator_stubs_stamp := $(full_target)
 $(uiautomator_internal_api_file) : $(full_target)
-
-###############################################
-# Build the stub source files into a jar.
-include $(CLEAR_VARS)
-LOCAL_MODULE := android_uiautomator
-LOCAL_SDK_VERSION := current
-LOCAL_SOURCE_FILES_ALL_GENERATED := true
-include $(BUILD_STATIC_JAVA_LIBRARY)
-# Make sure to run droiddoc first to generate the stub source files.
-$(full_classes_compiled_jar) : $(uiautomator_stubs_stamp)
-uiautomator_stubs_jar := $(full_classes_compiled_jar)
 
 ###############################################
 # API check
@@ -100,7 +85,7 @@ $(eval $(call check-api, \
     $(uiautomator_internal_api_file), \
     $(checkapi_last_error_level_flags), \
     cat $(LOCAL_PATH)/apicheck_msg_last.txt, \
-    $(uiautomator_stubs_jar), \
+    $(uiautomator_library), \
     $(uiautomator_stubs_stamp)))
 
 checkapi_current_error_level_flags := \
@@ -117,7 +102,7 @@ $(eval $(call check-api, \
     $(uiautomator_internal_api_file), \
     $(checkapi_current_error_level_flags), \
     cat $(LOCAL_PATH)/apicheck_msg_current.txt, \
-    $(uiautomator_stubs_jar), \
+    $(uiautomator_library), \
     $(uiautomator_stubs_stamp)))
 
 .PHONY: update-uiautomator-api
@@ -132,7 +117,7 @@ uiautomator.core_src_files :=
 uiautomator.core_java_libraries :=
 uiautomator_stubs_stamp :=
 uiautomator_internal_api_file :=
-uiautomator_stubs_jar :=
+uiautomator_library :=
 uiautomator_api_dir :=
 checkapi_last_error_level_flags :=
 checkapi_current_error_level_flags :=
