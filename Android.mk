@@ -28,7 +28,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(uiautomator.core_src_files)
 LOCAL_MODULE := uiautomator
 LOCAL_SDK_VERSION := current
-LOCAL_JAR_MANIFEST := version.mf
 
 include $(BUILD_STATIC_JAVA_LIBRARY)
 ###############################################
