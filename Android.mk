@@ -30,6 +30,16 @@ LOCAL_MODULE := uiautomator
 LOCAL_SDK_VERSION := current
 LOCAL_JAR_MANIFEST := version.mf
 
+gen := $(call intermediates-dir-for,JAVA_LIBRARIES,$(LOCAL_MODULE),,COMMON)/BuildConstants.java
+$(gen) : $(LOCAL_PATH)/BuildConstants.java.in
+	@echo Generating: $@
+	@ mkdir -p $(dir $@)
+	$(hide) sed -e 's/%BUILD_NUMBER%/$(BUILD_NUMBER)/' \
+		$< > $@
+
+LOCAL_GENERATED_SOURCES += $(gen)
+
+
 include $(BUILD_STATIC_JAVA_LIBRARY)
 ###############################################
 
