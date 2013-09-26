@@ -1,1 +1,0 @@
-Version-Incremental: %BUILD_NUMBER%

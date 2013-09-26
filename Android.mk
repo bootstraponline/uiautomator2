@@ -28,7 +28,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(uiautomator.core_src_files)
 LOCAL_MODULE := uiautomator
 LOCAL_SDK_VERSION := current
-LOCAL_JAR_MANIFEST := version.mf
 
 gen := $(call intermediates-dir-for,JAVA_LIBRARIES,$(LOCAL_MODULE),,COMMON)/BuildConstants.java
 $(gen) : $(LOCAL_PATH)/BuildConstants.java.in
