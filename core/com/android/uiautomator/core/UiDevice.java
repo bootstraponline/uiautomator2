@@ -58,7 +58,7 @@ public class UiDevice {
     private boolean mInWatcherContext = false;
 
     // provides access the {@link QueryController} and {@link InteractionController}
-    private UiAutomatorBridge mUiAutomationBridge;
+    private InstrumentationUiAutomatorBridge mUiAutomationBridge;
 
     // reference to self
     private static UiDevice sDevice;
@@ -70,7 +70,7 @@ public class UiDevice {
     /**
      * @hide
      */
-    public void initialize(UiAutomatorBridge uiAutomatorBridge) {
+    public void initialize(InstrumentationUiAutomatorBridge uiAutomatorBridge) {
         mUiAutomationBridge = uiAutomatorBridge;
     }
 
@@ -82,7 +82,7 @@ public class UiDevice {
      * Provides access the {@link QueryController} and {@link InteractionController}
      * @return {@link ShellUiAutomatorBridge}
      */
-    UiAutomatorBridge getAutomatorBridge() {
+    InstrumentationUiAutomatorBridge getAutomatorBridge() {
         if (mUiAutomationBridge == null) {
             throw new RuntimeException("UiDevice not initialized");
         }
@@ -752,7 +752,7 @@ public class UiDevice {
 
     /**
      * Helper method used for debugging to dump the current window's layout hierarchy.
-     * The file root location is /data/local/tmp
+     * Relative file paths are stored the application's internal private storage location.
      *
      * @param fileName
      * @since API Level 16
@@ -765,9 +765,14 @@ public class UiDevice {
             Display display = getAutomatorBridge().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            AccessibilityNodeInfoDumper.dumpWindowToFile(root,
-                    new File(new File(Environment.getDataDirectory(), "local/tmp"), fileName),
-                    display.getRotation(), size.x, size.y);
+            File dumpFile = new File(fileName);
+            if (!dumpFile.isAbsolute()) {
+                dumpFile = getAutomatorBridge().getContext().getFileStreamPath(fileName);
+            }
+            AccessibilityNodeInfoDumper.dumpWindowToFile(root, dumpFile, display.getRotation(),
+                    size.x, size.y);
+            Log.d(LOG_TAG, String.format("Saved window hierarchy to %s",
+                    dumpFile.getAbsolutePath()));
         }
     }
 

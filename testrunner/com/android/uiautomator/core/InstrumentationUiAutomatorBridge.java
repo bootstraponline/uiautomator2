@@ -57,4 +57,8 @@ public class InstrumentationUiAutomatorBridge extends UiAutomatorBridge {
     public long getSystemLongPressTime() {
         return ViewConfiguration.getLongPressTimeout();
     }
+
+    Context getContext() {
+        return mContext;
+    }
 }

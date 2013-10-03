@@ -43,28 +43,6 @@ public class AccessibilityNodeInfoDumper {
 
     /**
      * Using {@link AccessibilityNodeInfo} this method will walk the layout hierarchy
-     * and generates an xml dump into the /data/local/window_dump.xml
-     * @param root The root accessibility node.
-     * @param rotation The rotaion of current display
-     * @param width The pixel width of current display
-     * @param height The pixel height of current display
-     */
-    public static void dumpWindowToFile(AccessibilityNodeInfo root, int rotation,
-            int width, int height) {
-        File baseDir = new File(Environment.getDataDirectory(), "local");
-        if (!baseDir.exists()) {
-            baseDir.mkdir();
-            baseDir.setExecutable(true, false);
-            baseDir.setWritable(true, false);
-            baseDir.setReadable(true, false);
-        }
-        dumpWindowToFile(root,
-                new File(new File(Environment.getDataDirectory(), "local"), "window_dump.xml"),
-                rotation, width, height);
-    }
-
-    /**
-     * Using {@link AccessibilityNodeInfo} this method will walk the layout hierarchy
      * and generates an xml dump to the location specified by <code>dumpFile</code>
      * @param root The root accessibility node.
      * @param dumpFile The file to dump to.
