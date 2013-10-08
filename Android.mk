@@ -26,7 +26,7 @@ uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/ui
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(uiautomator.core_src_files)
-LOCAL_MODULE := uiautomator
+LOCAL_MODULE := ub-uiautomator
 LOCAL_SDK_VERSION := current
 
 gen := $(call intermediates-dir-for,JAVA_LIBRARIES,$(LOCAL_MODULE),,COMMON)/BuildConstants.java
@@ -57,7 +57,7 @@ LOCAL_DROIDDOC_OPTIONS:= \
     -api $(uiautomator_internal_api_file)
 LOCAL_DROIDDOC_CUSTOM_TEMPLATE_DIR := build/tools/droiddoc/templates-sdk
 
-LOCAL_MODULE := uiautomator-docs
+LOCAL_MODULE := ub-uiautomator-docs
 
 include $(BUILD_DROIDDOC)
 
