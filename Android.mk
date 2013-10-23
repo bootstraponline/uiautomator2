@@ -16,16 +16,13 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-uiautomator.core_src_files := $(call all-java-files-under, testrunner) \
-    $(call all-java-files-under, core)
-
 uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/uiautomator_api.txt
 
 ###############################################
 # Build core library
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(uiautomator.core_src_files)
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_MODULE := ub-uiautomator
 LOCAL_SDK_VERSION := current
 
@@ -48,7 +45,7 @@ uiautomator_library := $(LOCAL_BUILT_MODULE)
 ###############################################
 # Generate the stub source files
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(uiautomator.core_src_files)
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_SDK_VERSION := current
 LOCAL_MODULE_CLASS := DOCS
 LOCAL_DROIDDOC_HTML_DIR :=
@@ -113,8 +110,6 @@ update-uiautomator-api: $(uiautomator_internal_api_file) | $(ACP)
 
 ###############################################
 # clean up temp vars
-uiautomator.core_src_files :=
-uiautomator.core_java_libraries :=
 uiautomator_stubs_stamp :=
 uiautomator_internal_api_file :=
 uiautomator_library :=
