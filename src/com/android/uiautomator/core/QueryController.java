@@ -146,17 +146,15 @@ class QueryController {
         if (DEBUG)
             Log.d(LOG_TAG, "Searching: " + selector);
 
-        synchronized (mLock) {
-            AccessibilityNodeInfo rootNode = getRootNode();
-            if (rootNode == null) {
-                Log.e(LOG_TAG, "Cannot proceed when root node is null. Aborted search");
-                return null;
-            }
-
-            // Copy so that we don't modify the original's sub selectors
-            UiSelector uiSelector = new UiSelector(selector);
-            return translateCompoundSelector(uiSelector, rootNode, isCounting);
+        AccessibilityNodeInfo rootNode = getRootNode();
+        if (rootNode == null) {
+            Log.e(LOG_TAG, "Cannot proceed when root node is null. Aborted search");
+            return null;
         }
+
+        // Copy so that we don't modify the original's sub selectors
+        UiSelector uiSelector = new UiSelector(selector);
+        return translateCompoundSelector(uiSelector, rootNode, isCounting);
     }
 
     /**
