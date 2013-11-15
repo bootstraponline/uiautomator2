@@ -77,7 +77,7 @@ checkapi_last_error_level_flags := \
 
 # Check that the API we're building hasn't broken the last-released SDK version.
 $(eval $(call check-api, \
-    uiautomator-checkapi-last, \
+    ub-uiautomator-checkapi-last, \
     $(uiautomator_api_dir)/$(last_released_sdk_version).txt, \
     $(uiautomator_internal_api_file), \
     $(checkapi_last_error_level_flags), \
@@ -94,7 +94,7 @@ checkapi_current_error_level_flags := \
 # Check that the API we're building hasn't changed from the not-yet-released
 # SDK version.
 $(eval $(call check-api, \
-    uiautomator-checkapi-current, \
+    ub-uiautomator-checkapi-current, \
     $(uiautomator_api_dir)/current.txt, \
     $(uiautomator_internal_api_file), \
     $(checkapi_current_error_level_flags), \
@@ -102,9 +102,9 @@ $(eval $(call check-api, \
     $(uiautomator_library), \
     $(uiautomator_stubs_stamp)))
 
-.PHONY: update-uiautomator-api
-update-uiautomator-api: PRIVATE_API_DIR := $(uiautomator_api_dir)
-update-uiautomator-api: $(uiautomator_internal_api_file) | $(ACP)
+.PHONY: update-ub-uiautomator-api
+update-ub-uiautomator-api: PRIVATE_API_DIR := $(uiautomator_api_dir)
+update-ub-uiautomator-api: $(uiautomator_internal_api_file) | $(ACP)
 	@echo Copying uiautomator current.txt
 	$(hide) $(ACP) $< $(PRIVATE_API_DIR)/current.txt
 
