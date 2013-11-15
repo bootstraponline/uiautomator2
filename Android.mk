@@ -16,7 +16,7 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/uiautomator_api.txt
+uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/ub_uiautomator_api.txt
 
 ###############################################
 # Build core library
