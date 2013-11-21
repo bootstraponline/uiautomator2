@@ -113,6 +113,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector text(String text) {
+        if (text == null) {
+            throw new IllegalArgumentException("text cannot be null");
+        }
         return buildSelector(SELECTOR_TEXT, text);
     }
 
@@ -128,6 +131,9 @@ public class UiSelector {
      * @since API Level 17
      */
     public UiSelector textMatches(String regex) {
+        if (regex == null) {
+            throw new IllegalArgumentException("regex cannot be null");
+        }
         return buildSelector(SELECTOR_TEXT_REGEX, Pattern.compile(regex));
     }
 
@@ -142,6 +148,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector textStartsWith(String text) {
+        if (text == null) {
+            throw new IllegalArgumentException("text cannot be null");
+        }
         return buildSelector(SELECTOR_START_TEXT, text);
     }
 
@@ -156,6 +165,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector textContains(String text) {
+        if (text == null) {
+            throw new IllegalArgumentException("text cannot be null");
+        }
         return buildSelector(SELECTOR_CONTAINS_TEXT, text);
     }
 
@@ -168,6 +180,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector className(String className) {
+        if (className == null) {
+            throw new IllegalArgumentException("className cannot be null");
+        }
         return buildSelector(SELECTOR_CLASS, className);
     }
 
@@ -180,6 +195,9 @@ public class UiSelector {
      * @since API Level 17
      */
     public UiSelector classNameMatches(String regex) {
+        if (regex == null) {
+            throw new IllegalArgumentException("regex cannot be null");
+        }
         return buildSelector(SELECTOR_CLASS_REGEX, Pattern.compile(regex));
     }
 
@@ -192,6 +210,9 @@ public class UiSelector {
      * @since API Level 17
      */
     public <T> UiSelector className(Class<T> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type cannot be null");
+        }
         return buildSelector(SELECTOR_CLASS, type.getName());
     }
 
@@ -213,6 +234,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector description(String desc) {
+        if (desc == null) {
+            throw new IllegalArgumentException("desc cannot be null");
+        }
         return buildSelector(SELECTOR_DESCRIPTION, desc);
     }
 
@@ -232,6 +256,9 @@ public class UiSelector {
      * @since API Level 17
      */
     public UiSelector descriptionMatches(String regex) {
+        if (regex == null) {
+            throw new IllegalArgumentException("regex cannot be null");
+        }
         return buildSelector(SELECTOR_DESCRIPTION_REGEX, Pattern.compile(regex));
     }
 
@@ -253,6 +280,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector descriptionStartsWith(String desc) {
+        if (desc == null) {
+            throw new IllegalArgumentException("desc cannot be null");
+        }
         return buildSelector(SELECTOR_START_DESCRIPTION, desc);
     }
 
@@ -274,6 +304,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector descriptionContains(String desc) {
+        if (desc == null) {
+            throw new IllegalArgumentException("desc cannot be null");
+        }
         return buildSelector(SELECTOR_CONTAINS_DESCRIPTION, desc);
     }
 
@@ -285,6 +318,9 @@ public class UiSelector {
      * @since API Level 18
      */
     public UiSelector resourceId(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
         return buildSelector(SELECTOR_RESOURCE_ID, id);
     }
 
@@ -297,6 +333,9 @@ public class UiSelector {
      * @since API Level 18
      */
     public UiSelector resourceIdMatches(String regex) {
+        if (regex == null) {
+            throw new IllegalArgumentException("regex cannot be null");
+        }
         return buildSelector(SELECTOR_RESOURCE_ID_REGEX, Pattern.compile(regex));
     }
 
@@ -528,6 +567,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector childSelector(UiSelector selector) {
+        if (selector == null) {
+            throw new IllegalArgumentException("selector cannot be null");
+        }
         return buildSelector(SELECTOR_CHILD, selector);
     }
 
@@ -551,6 +593,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector fromParent(UiSelector selector) {
+        if (selector == null) {
+            throw new IllegalArgumentException("selector cannot be null");
+        }
         return buildSelector(SELECTOR_PARENT, selector);
     }
 
@@ -563,6 +608,9 @@ public class UiSelector {
      * @since API Level 16
      */
     public UiSelector packageName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name cannot be null");
+        }
         return buildSelector(SELECTOR_PACKAGE_NAME, name);
     }
 
@@ -575,6 +623,9 @@ public class UiSelector {
      * @since API Level 17
      */
     public UiSelector packageNameMatches(String regex) {
+        if (regex == null) {
+            throw new IllegalArgumentException("regex cannot be null");
+        }
         return buildSelector(SELECTOR_PACKAGE_NAME_REGEX, Pattern.compile(regex));
     }
 
