@@ -433,7 +433,7 @@ public class UiObject {
         }
         Rect rect = getVisibleBounds(node);
         return getInteractionController().clickAndWaitForNewWindow(rect.centerX(), rect.centerY(),
-                mConfig.getActionAcknowledgmentTimeout());
+                timeout);
     }
 
     /**

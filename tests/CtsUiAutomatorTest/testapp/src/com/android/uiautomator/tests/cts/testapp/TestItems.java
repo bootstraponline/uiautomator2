@@ -90,6 +90,7 @@ public class TestItems {
         addTestItem(new TestItem("38", "Test 38", TestGenericDetailFragment.class));
         addTestItem(new TestItem("39", "Test 39", TestGenericDetailFragment.class));
         addTestItem(new TestItem("40", "Test 40", TestGenericDetailFragment.class));
+        addTestItem(new TestItem("41", "Timeout Test", TestTimeoutFragment.class));
     }
 
     private static void addTestItem(TestItem item) {

@@ -43,6 +43,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="FragmentActivity" />
         </activity>
+        <activity android:name=".LaunchedActivity" />
      </application>
 
 </manifest>
