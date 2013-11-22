@@ -450,7 +450,8 @@ public class UiObject {
             throw new UiObjectNotFoundException(getSelector().toString());
         }
         Rect rect = getVisibleBounds(node);
-        return getInteractionController().clickNoSync(rect.left + 5, rect.top + 5);
+        return getInteractionController().clickAndSync(rect.left + 5, rect.top + 5,
+                mConfig.getActionAcknowledgmentTimeout());
     }
 
     /**
@@ -467,7 +468,8 @@ public class UiObject {
             throw new UiObjectNotFoundException(getSelector().toString());
         }
         Rect rect = getVisibleBounds(node);
-        return getInteractionController().longTapNoSync(rect.right - 5, rect.bottom - 5);
+        return getInteractionController().longTapAndSync(rect.right - 5, rect.bottom - 5,
+                mConfig.getActionAcknowledgmentTimeout());
     }
 
     /**
@@ -484,7 +486,8 @@ public class UiObject {
             throw new UiObjectNotFoundException(getSelector().toString());
         }
         Rect rect = getVisibleBounds(node);
-        return getInteractionController().clickNoSync(rect.right - 5, rect.bottom - 5);
+        return getInteractionController().clickAndSync(rect.right - 5, rect.bottom - 5,
+                mConfig.getActionAcknowledgmentTimeout());
     }
 
     /**
@@ -501,7 +504,8 @@ public class UiObject {
             throw new UiObjectNotFoundException(getSelector().toString());
         }
         Rect rect = getVisibleBounds(node);
-        return getInteractionController().longTapNoSync(rect.centerX(), rect.centerY());
+        return getInteractionController().longTapAndSync(rect.centerX(), rect.centerY(),
+                mConfig.getActionAcknowledgmentTimeout());
     }
 
     /**
@@ -518,7 +522,8 @@ public class UiObject {
             throw new UiObjectNotFoundException(getSelector().toString());
         }
         Rect rect = getVisibleBounds(node);
-        return getInteractionController().longTapNoSync(rect.left + 5, rect.top + 5);
+        return getInteractionController().longTapAndSync(rect.left + 5, rect.top + 5,
+                mConfig.getActionAcknowledgmentTimeout());
     }
 
     /**

@@ -281,6 +281,26 @@ class InteractionController {
     }
 
     /**
+     * Returns a Runnable for use in {@link #runAndWaitForEvents(Runnable, Predicate, long) to
+     * perform a long tap.
+     *
+     * @param x coordinate
+     * @param y coordinate
+     * @return Runnable
+     */
+    private Runnable longTapRunnable(final int x, final int y) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                if(touchDown(x, y)) {
+                    SystemClock.sleep(mUiAutomatorBridge.getSystemLongPressTime());
+                    touchUp(x, y);
+                }
+            }
+        };
+    }
+
+    /**
      * Touches down for a long press at the specified coordinates.
      *
      * @param x
@@ -299,6 +319,25 @@ class InteractionController {
             }
         }
         return false;
+    }
+
+    /**
+     * Long tap at coordinates and blocks until either accessibility event
+     * TYPE_WINDOW_CONTENT_CHANGED or TYPE_VIEW_SELECTED are received.
+     *
+     * @param x
+     * @param y
+     * @param timeout waiting for event
+     * @return true if events are received, else false if timeout.
+     */
+    public boolean longTapAndSync(final int x, final int y, long timeout) {
+
+        String logString = String.format("clickAndSync(%d, %d)", x, y);
+        Log.d(LOG_TAG, logString);
+
+        return runAndWaitForEvents(longTapRunnable(x, y), new WaitForAnyEventPredicate(
+                AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED |
+                AccessibilityEvent.TYPE_VIEW_SELECTED), timeout) != null;
     }
 
     private boolean touchDown(int x, int y) {
