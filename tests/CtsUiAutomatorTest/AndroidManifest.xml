@@ -15,7 +15,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.uiautomator.tests.cts">
+    package="android.support.test.uiautomator.tests.cts">
 
     <uses-sdk android:minSdkVersion="18" />
 
@@ -24,8 +24,8 @@
     </application>
 
     <instrumentation
-            android:name="com.android.uiautomator.testrunner.UiAutomatorInstrumentationTestRunner"
-            android:targetPackage="com.android.uiautomator.tests.cts"
+            android:name="android.support.test.uiautomator.UiAutomatorInstrumentationTestRunner"
+            android:targetPackage="android.support.test.uiautomator.tests.cts"
             android:label="UiAutomator Tests"/>
 
 </manifest>

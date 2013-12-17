@@ -50,7 +50,7 @@ LOCAL_SDK_VERSION := current
 LOCAL_MODULE_CLASS := DOCS
 LOCAL_DROIDDOC_HTML_DIR :=
 LOCAL_DROIDDOC_OPTIONS:= \
-    -stubpackages com.android.uiautomator.core:com.android.uiautomator.testrunner \
+    -stubpackages android.support.test.uiautomator \
     -api $(uiautomator_internal_api_file)
 LOCAL_DROIDDOC_CUSTOM_TEMPLATE_DIR := build/tools/droiddoc/templates-sdk
 

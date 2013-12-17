@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/item_list"
-        android:name="com.android.uiautomator.tests.cts.testapp.TestListFragment"
+        android:name="android.support.test.uiautomator.tests.cts.testapp.TestListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />

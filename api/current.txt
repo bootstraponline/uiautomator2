@@ -1,25 +1,41 @@
-package com.android.uiautomator.core {
+package android.support.test.uiautomator {
 
   public final class Configurator {
     method public long getActionAcknowledgmentTimeout();
-    method public static com.android.uiautomator.core.Configurator getInstance();
+    method public static android.support.test.uiautomator.Configurator getInstance();
     method public long getKeyInjectionDelay();
     method public long getScrollAcknowledgmentTimeout();
     method public long getWaitForIdleTimeout();
     method public long getWaitForSelectorTimeout();
-    method public com.android.uiautomator.core.Configurator setActionAcknowledgmentTimeout(long);
-    method public com.android.uiautomator.core.Configurator setKeyInjectionDelay(long);
-    method public com.android.uiautomator.core.Configurator setScrollAcknowledgmentTimeout(long);
-    method public com.android.uiautomator.core.Configurator setWaitForIdleTimeout(long);
-    method public com.android.uiautomator.core.Configurator setWaitForSelectorTimeout(long);
+    method public android.support.test.uiautomator.Configurator setActionAcknowledgmentTimeout(long);
+    method public android.support.test.uiautomator.Configurator setKeyInjectionDelay(long);
+    method public android.support.test.uiautomator.Configurator setScrollAcknowledgmentTimeout(long);
+    method public android.support.test.uiautomator.Configurator setWaitForIdleTimeout(long);
+    method public android.support.test.uiautomator.Configurator setWaitForSelectorTimeout(long);
   }
 
-  public class UiCollection extends com.android.uiautomator.core.UiObject {
-    ctor public UiCollection(com.android.uiautomator.core.UiSelector);
-    method public com.android.uiautomator.core.UiObject getChildByDescription(com.android.uiautomator.core.UiSelector, java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiObject getChildByInstance(com.android.uiautomator.core.UiSelector, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiObject getChildByText(com.android.uiautomator.core.UiSelector, java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public int getChildCount(com.android.uiautomator.core.UiSelector);
+  public abstract interface IAutomationSupport {
+    method public abstract void sendStatus(int, android.os.Bundle);
+  }
+
+  public class UiAutomatorInstrumentationTestRunner extends android.test.InstrumentationTestRunner {
+    ctor public UiAutomatorInstrumentationTestRunner();
+  }
+
+  public class UiAutomatorTestCase extends android.test.InstrumentationTestCase {
+    ctor public UiAutomatorTestCase();
+    method public deprecated android.support.test.uiautomator.IAutomationSupport getAutomationSupport();
+    method public android.os.Bundle getParams();
+    method public android.support.test.uiautomator.UiDevice getUiDevice();
+    method public void sleep(long);
+  }
+
+  public class UiCollection extends android.support.test.uiautomator.UiObject {
+    ctor public UiCollection(android.support.test.uiautomator.UiSelector);
+    method public android.support.test.uiautomator.UiObject getChildByDescription(android.support.test.uiautomator.UiSelector, java.lang.String) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiObject getChildByInstance(android.support.test.uiautomator.UiSelector, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiObject getChildByText(android.support.test.uiautomator.UiSelector, java.lang.String) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public int getChildCount(android.support.test.uiautomator.UiSelector);
   }
 
   public class UiDevice {
@@ -34,7 +50,7 @@ package com.android.uiautomator.core {
     method public int getDisplayRotation();
     method public android.graphics.Point getDisplaySizeDp();
     method public int getDisplayWidth();
-    method public static com.android.uiautomator.core.UiDevice getInstance();
+    method public static android.support.test.uiautomator.UiDevice getInstance();
     method public java.lang.String getLastTraversedText();
     method public java.lang.String getProductName();
     method public boolean hasAnyWatcherTriggered();
@@ -57,7 +73,7 @@ package com.android.uiautomator.core {
     method public boolean pressMenu();
     method public boolean pressRecentApps() throws android.os.RemoteException;
     method public boolean pressSearch();
-    method public void registerWatcher(java.lang.String, com.android.uiautomator.core.UiWatcher);
+    method public void registerWatcher(java.lang.String, android.support.test.uiautomator.UiWatcher);
     method public void removeWatcher(java.lang.String);
     method public void resetWatcherTriggers();
     method public void runWatchers();
@@ -78,48 +94,48 @@ package com.android.uiautomator.core {
   }
 
   public class UiObject {
-    ctor public UiObject(com.android.uiautomator.core.UiSelector);
-    method public void clearTextField() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean click() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean clickAndWaitForNewWindow() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean clickAndWaitForNewWindow(long) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean clickBottomRight() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean clickTopLeft() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean dragTo(com.android.uiautomator.core.UiObject, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean dragTo(int, int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
+    ctor public UiObject(android.support.test.uiautomator.UiSelector);
+    method public void clearTextField() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean click() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean clickAndWaitForNewWindow() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean clickAndWaitForNewWindow(long) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean clickBottomRight() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean clickTopLeft() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean dragTo(android.support.test.uiautomator.UiObject, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean dragTo(int, int, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
     method public boolean exists();
     method protected android.view.accessibility.AccessibilityNodeInfo findAccessibilityNodeInfo(long);
-    method public android.graphics.Rect getBounds() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiObject getChild(com.android.uiautomator.core.UiSelector) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public int getChildCount() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public java.lang.String getClassName() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public java.lang.String getContentDescription() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiObject getFromParent(com.android.uiautomator.core.UiSelector) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public java.lang.String getPackageName() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public final com.android.uiautomator.core.UiSelector getSelector();
-    method public java.lang.String getText() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public android.graphics.Rect getVisibleBounds() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isCheckable() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isChecked() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isClickable() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isEnabled() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isFocusable() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isFocused() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isLongClickable() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isScrollable() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean isSelected() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean longClick() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean longClickBottomRight() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean longClickTopLeft() throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public android.graphics.Rect getBounds() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiObject getChild(android.support.test.uiautomator.UiSelector) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public int getChildCount() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public java.lang.String getClassName() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public java.lang.String getContentDescription() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiObject getFromParent(android.support.test.uiautomator.UiSelector) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public java.lang.String getPackageName() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public final android.support.test.uiautomator.UiSelector getSelector();
+    method public java.lang.String getText() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.graphics.Rect getVisibleBounds() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isCheckable() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isChecked() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isClickable() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isEnabled() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isFocusable() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isFocused() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isLongClickable() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isScrollable() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean isSelected() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean longClick() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean longClickBottomRight() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean longClickTopLeft() throws android.support.test.uiautomator.UiObjectNotFoundException;
     method public boolean performMultiPointerGesture(android.view.MotionEvent.PointerCoords...);
     method public boolean performTwoPointerGesture(android.graphics.Point, android.graphics.Point, android.graphics.Point, android.graphics.Point, int);
-    method public boolean pinchIn(int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean pinchOut(int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean setText(java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean swipeDown(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean swipeLeft(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean swipeRight(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean swipeUp(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
+    method public boolean pinchIn(int, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean pinchOut(int, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean setText(java.lang.String) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean swipeDown(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean swipeLeft(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean swipeRight(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean swipeUp(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
     method public boolean waitForExists(long);
     method public boolean waitUntilGone(long);
     field protected static final int FINGER_TOUCH_HALF_WIDTH = 20; // 0x14
@@ -136,90 +152,70 @@ package com.android.uiautomator.core {
     ctor public UiObjectNotFoundException(java.lang.Throwable);
   }
 
-  public class UiScrollable extends com.android.uiautomator.core.UiCollection {
-    ctor public UiScrollable(com.android.uiautomator.core.UiSelector);
-    method protected boolean exists(com.android.uiautomator.core.UiSelector);
-    method public boolean flingBackward() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean flingForward() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean flingToBeginning(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean flingToEnd(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiObject getChildByDescription(com.android.uiautomator.core.UiSelector, java.lang.String, boolean) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiObject getChildByText(com.android.uiautomator.core.UiSelector, java.lang.String, boolean) throws com.android.uiautomator.core.UiObjectNotFoundException;
+  public class UiScrollable extends android.support.test.uiautomator.UiCollection {
+    ctor public UiScrollable(android.support.test.uiautomator.UiSelector);
+    method protected boolean exists(android.support.test.uiautomator.UiSelector);
+    method public boolean flingBackward() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean flingForward() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean flingToBeginning(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean flingToEnd(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiObject getChildByDescription(android.support.test.uiautomator.UiSelector, java.lang.String, boolean) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiObject getChildByText(android.support.test.uiautomator.UiSelector, java.lang.String, boolean) throws android.support.test.uiautomator.UiObjectNotFoundException;
     method public int getMaxSearchSwipes();
     method public double getSwipeDeadZonePercentage();
-    method public boolean scrollBackward() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollBackward(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollDescriptionIntoView(java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollForward() throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollForward(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollIntoView(com.android.uiautomator.core.UiObject) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollIntoView(com.android.uiautomator.core.UiSelector) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollTextIntoView(java.lang.String) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollToBeginning(int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollToBeginning(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollToEnd(int, int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public boolean scrollToEnd(int) throws com.android.uiautomator.core.UiObjectNotFoundException;
-    method public com.android.uiautomator.core.UiScrollable setAsHorizontalList();
-    method public com.android.uiautomator.core.UiScrollable setAsVerticalList();
-    method public com.android.uiautomator.core.UiScrollable setMaxSearchSwipes(int);
-    method public com.android.uiautomator.core.UiScrollable setSwipeDeadZonePercentage(double);
+    method public boolean scrollBackward() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollBackward(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollDescriptionIntoView(java.lang.String) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollForward() throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollForward(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollIntoView(android.support.test.uiautomator.UiObject) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollIntoView(android.support.test.uiautomator.UiSelector) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollTextIntoView(java.lang.String) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollToBeginning(int, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollToBeginning(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollToEnd(int, int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public boolean scrollToEnd(int) throws android.support.test.uiautomator.UiObjectNotFoundException;
+    method public android.support.test.uiautomator.UiScrollable setAsHorizontalList();
+    method public android.support.test.uiautomator.UiScrollable setAsVerticalList();
+    method public android.support.test.uiautomator.UiScrollable setMaxSearchSwipes(int);
+    method public android.support.test.uiautomator.UiScrollable setSwipeDeadZonePercentage(double);
   }
 
   public class UiSelector {
     ctor public UiSelector();
-    method public com.android.uiautomator.core.UiSelector checkable(boolean);
-    method public com.android.uiautomator.core.UiSelector checked(boolean);
-    method public com.android.uiautomator.core.UiSelector childSelector(com.android.uiautomator.core.UiSelector);
-    method public com.android.uiautomator.core.UiSelector className(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector className(java.lang.Class<T>);
-    method public com.android.uiautomator.core.UiSelector classNameMatches(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector clickable(boolean);
-    method protected com.android.uiautomator.core.UiSelector cloneSelector();
-    method public com.android.uiautomator.core.UiSelector description(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector descriptionContains(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector descriptionMatches(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector descriptionStartsWith(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector enabled(boolean);
-    method public com.android.uiautomator.core.UiSelector focusable(boolean);
-    method public com.android.uiautomator.core.UiSelector focused(boolean);
-    method public com.android.uiautomator.core.UiSelector fromParent(com.android.uiautomator.core.UiSelector);
-    method public com.android.uiautomator.core.UiSelector index(int);
-    method public com.android.uiautomator.core.UiSelector instance(int);
-    method public com.android.uiautomator.core.UiSelector longClickable(boolean);
-    method public com.android.uiautomator.core.UiSelector packageName(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector packageNameMatches(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector resourceId(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector resourceIdMatches(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector scrollable(boolean);
-    method public com.android.uiautomator.core.UiSelector selected(boolean);
-    method public com.android.uiautomator.core.UiSelector text(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector textContains(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector textMatches(java.lang.String);
-    method public com.android.uiautomator.core.UiSelector textStartsWith(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector checkable(boolean);
+    method public android.support.test.uiautomator.UiSelector checked(boolean);
+    method public android.support.test.uiautomator.UiSelector childSelector(android.support.test.uiautomator.UiSelector);
+    method public android.support.test.uiautomator.UiSelector className(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector className(java.lang.Class<T>);
+    method public android.support.test.uiautomator.UiSelector classNameMatches(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector clickable(boolean);
+    method protected android.support.test.uiautomator.UiSelector cloneSelector();
+    method public android.support.test.uiautomator.UiSelector description(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector descriptionContains(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector descriptionMatches(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector descriptionStartsWith(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector enabled(boolean);
+    method public android.support.test.uiautomator.UiSelector focusable(boolean);
+    method public android.support.test.uiautomator.UiSelector focused(boolean);
+    method public android.support.test.uiautomator.UiSelector fromParent(android.support.test.uiautomator.UiSelector);
+    method public android.support.test.uiautomator.UiSelector index(int);
+    method public android.support.test.uiautomator.UiSelector instance(int);
+    method public android.support.test.uiautomator.UiSelector longClickable(boolean);
+    method public android.support.test.uiautomator.UiSelector packageName(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector packageNameMatches(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector resourceId(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector resourceIdMatches(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector scrollable(boolean);
+    method public android.support.test.uiautomator.UiSelector selected(boolean);
+    method public android.support.test.uiautomator.UiSelector text(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector textContains(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector textMatches(java.lang.String);
+    method public android.support.test.uiautomator.UiSelector textStartsWith(java.lang.String);
   }
 
   public abstract interface UiWatcher {
     method public abstract boolean checkForCondition();
-  }
-
-}
-
-package com.android.uiautomator.testrunner {
-
-  public abstract interface IAutomationSupport {
-    method public abstract void sendStatus(int, android.os.Bundle);
-  }
-
-  public class UiAutomatorInstrumentationTestRunner extends android.test.InstrumentationTestRunner {
-    ctor public UiAutomatorInstrumentationTestRunner();
-  }
-
-  public class UiAutomatorTestCase extends android.test.InstrumentationTestCase {
-    ctor public UiAutomatorTestCase();
-    method public deprecated com.android.uiautomator.testrunner.IAutomationSupport getAutomationSupport();
-    method public android.os.Bundle getParams();
-    method public com.android.uiautomator.core.UiDevice getUiDevice();
-    method public void sleep(long);
   }
 
 }

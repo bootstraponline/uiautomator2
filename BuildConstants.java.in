@@ -1,5 +1,5 @@
 /* This file is auto generated. Do not modify. */
-package com.android.uiautomator.core;
+package android.support.test.uiautomator;
 
 public class BuildConstants {
     public static final String VERSION_MAIN = "0";

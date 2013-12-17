@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
- * Copyright (C) 2013 The Android Open Source Project
+/*
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- -->
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:name="android.support.test.uiautomator.tests.cts.testapp.TestListFragment"
-    android:id="@+id/item_list"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    tools:context=".MainActivity" />
+ */
+
+package android.support.test.uiautomator;
+
+import android.os.Bundle;
+
+/**
+ * Provides auxiliary support for running test cases
+ *
+ * @since API Level 16
+ */
+public interface IAutomationSupport {
+
+    /**
+     * Allows the running test cases to send out interim status
+     *
+     * @param resultCode
+     * @param status status report, consisting of key value pairs
+     * @since API Level 16
+     */
+    public void sendStatus(int resultCode, Bundle status);
+
+}
