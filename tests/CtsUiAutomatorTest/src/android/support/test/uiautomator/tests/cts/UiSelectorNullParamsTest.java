@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.uiautomator.tests.cts;
+package android.support.test.uiautomator.tests.cts;
 
-import com.android.uiautomator.core.UiSelector;
-import com.android.uiautomator.testrunner.UiAutomatorTestCase;
+import android.support.test.uiautomator.UiSelector;
+import android.support.test.uiautomator.UiAutomatorTestCase;
 
 /*
  * Test that UiSelector methods will not accept null parameters.
