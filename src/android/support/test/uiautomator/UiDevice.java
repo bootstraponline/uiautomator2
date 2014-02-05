@@ -16,6 +16,7 @@
 
 package android.support.test.uiautomator;
 
+import android.app.Instrumentation;
 import android.app.UiAutomation;
 import android.app.UiAutomation.AccessibilityEventFilter;
 import android.graphics.Point;
@@ -44,6 +45,7 @@ import java.util.concurrent.TimeoutException;
  * @since API Level 16
  */
 public class UiDevice {
+
     private static final String LOG_TAG = UiDevice.class.getSimpleName();
 
     // Sometimes HOME and BACK key presses will generate no events if already on
@@ -62,14 +64,23 @@ public class UiDevice {
 
     // reference to self
     private static UiDevice sDevice;
+    private static Instrumentation sInstrumentation;
 
-    private UiDevice() {
-        /* hide constructor */
+    /**
+     * @deprecated Should use {@link UiDevice(InstrumentationUiAutomatorBridge)} instead.
+     */
+    @Deprecated
+    private UiDevice() {}
+
+    private UiDevice(InstrumentationUiAutomatorBridge uiAutomatorBridge) {
+        mUiAutomationBridge = uiAutomatorBridge;
     }
 
     /**
      * @hide
+     * @deprecated Should use {@link UiDevice#getInstance(Instrumentation)} instead.
      */
+    @Deprecated
     public void initialize(InstrumentationUiAutomatorBridge uiAutomatorBridge) {
         mUiAutomationBridge = uiAutomatorBridge;
     }
@@ -107,13 +118,36 @@ public class UiDevice {
     /**
      * Retrieves a singleton instance of UiDevice
      *
+     * @deprecated Should use {@link #getInstance(Instrumentation)} instead. This version hides
+     * UiDevice's dependency on having an Instrumentation reference and is prone to misuse.
      * @return UiDevice instance
      * @since API Level 16
      */
+    @Deprecated
     public static UiDevice getInstance() {
         if (sDevice == null) {
             sDevice = new UiDevice();
         }
+        return sDevice;
+    }
+
+    /**
+     * Retrieves a singleton instance of UiDevice
+     *
+     * @return UiDevice instance
+     */
+    public static UiDevice getInstance(Instrumentation instrumentation) {
+        if (sInstrumentation != instrumentation && sInstrumentation != null) {
+            throw new IllegalStateException("TODO");
+        }
+
+        if (sDevice == null) {
+            sInstrumentation = instrumentation;
+            sDevice = new UiDevice(new InstrumentationUiAutomatorBridge(
+                instrumentation.getContext(),
+                instrumentation.getUiAutomation()));
+        }
+
         return sDevice;
     }
 
