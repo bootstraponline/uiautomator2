@@ -43,6 +43,7 @@ package android.support.test.uiautomator {
     method public boolean click(int, int);
     method public boolean drag(int, int, int, int, int);
     method public void dumpWindowHierarchy(java.lang.String);
+    method public android.support.test.uiautomator.UiObject findObject(android.support.test.uiautomator.UiSelector);
     method public void freezeRotation() throws android.os.RemoteException;
     method public deprecated java.lang.String getCurrentActivityName();
     method public java.lang.String getCurrentPackageName();
@@ -95,7 +96,7 @@ package android.support.test.uiautomator {
   }
 
   public class UiObject {
-    ctor public UiObject(android.support.test.uiautomator.UiSelector);
+    ctor public deprecated UiObject(android.support.test.uiautomator.UiSelector);
     method public void clearTextField() throws android.support.test.uiautomator.UiObjectNotFoundException;
     method public boolean click() throws android.support.test.uiautomator.UiObjectNotFoundException;
     method public boolean clickAndWaitForNewWindow() throws android.support.test.uiautomator.UiObjectNotFoundException;

@@ -65,16 +65,31 @@ public class UiObject {
     protected static final int FINGER_TOUCH_HALF_WIDTH = 20;
 
     private final UiSelector mSelector;
+    private final UiDevice mDevice;
 
     private final Configurator mConfig = Configurator.getInstance();
 
     /**
      * Constructs a UiObject to represent a view that matches the specified
      * selector criteria.
+     *
+     * @deprecated Use {@link UiDevice#findObject(UiSelector)} instead. This version hides
+     * UiObject's dependency on UiDevice and is prone to misuse.
      * @param selector
      * @since API Level 16
      */
+    @Deprecated
     public UiObject(UiSelector selector) {
+        mSelector = selector;
+        mDevice = UiDevice.getInstance();
+    }
+
+    /**
+     * Package-private constructor. Used by {@link UiDevice#findObject(UiSelector)} to construct a
+     * UiObject.
+     */
+    UiObject(UiDevice device, UiSelector selector) {
+        mDevice = device;
         mSelector = selector;
     }
 
@@ -97,7 +112,7 @@ public class UiObject {
      * @return {@link QueryController}
      */
     QueryController getQueryController() {
-        return UiDevice.getInstance().getAutomatorBridge().getQueryController();
+        return mDevice.getAutomatorBridge().getQueryController();
     }
 
     /**
@@ -107,7 +122,7 @@ public class UiObject {
      * @return {@link InteractionController}
      */
     InteractionController getInteractionController() {
-        return UiDevice.getInstance().getAutomatorBridge().getInteractionController();
+        return mDevice.getAutomatorBridge().getInteractionController();
     }
 
     /**
@@ -123,7 +138,7 @@ public class UiObject {
     }
 
     /**
-     * Creates a new UiObject for a sibling view or a child of the sibling view, 
+     * Creates a new UiObject for a sibling view or a child of the sibling view,
      * relative to the present UiObject.
      *
      * @param selector for a sibling view or children of the sibling view
@@ -170,7 +185,7 @@ public class UiObject {
                 break;
             } else {
                 // does nothing if we're reentering another runWatchers()
-                UiDevice.getInstance().runWatchers();
+                mDevice.runWatchers();
             }
             currentMills = SystemClock.uptimeMillis() - startMills;
             if(timeout > 0) {
@@ -338,8 +353,8 @@ public class UiObject {
         }
 
         // targeted node's bounds
-        int w = UiDevice.getInstance().getDisplayWidth();
-        int h = UiDevice.getInstance().getDisplayHeight();
+        int w = mDevice.getDisplayWidth();
+        int h = mDevice.getDisplayHeight();
         Rect nodeRect = AccessibilityNodeInfoHelper.getVisibleBoundsInScreen(node, w, h);
 
         // is the targeted node within a scrollable container?
