@@ -101,6 +101,16 @@ public class UiDevice {
     }
 
     /**
+     * Returns a UiObject which represents a view that matches the specified selector criteria.
+     *
+     * @param selector
+     * @return UiObject object
+     */
+    public UiObject findObject(UiSelector selector) {
+        return new UiObject(this, selector);
+    }
+
+    /**
      * Enables or disables layout hierarchy compression.
      *
      * If compression is enabled, the layout hierarchy derived from the Acessibility
