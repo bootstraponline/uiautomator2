@@ -50,7 +50,8 @@ package android.support.test.uiautomator {
     method public int getDisplayRotation();
     method public android.graphics.Point getDisplaySizeDp();
     method public int getDisplayWidth();
-    method public static android.support.test.uiautomator.UiDevice getInstance();
+    method public static deprecated android.support.test.uiautomator.UiDevice getInstance();
+    method public static android.support.test.uiautomator.UiDevice getInstance(android.app.Instrumentation);
     method public java.lang.String getLastTraversedText();
     method public java.lang.String getProductName();
     method public boolean hasAnyWatcherTriggered();
