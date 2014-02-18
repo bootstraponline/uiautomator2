@@ -18,6 +18,7 @@ package android.support.test.uiautomator;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -598,9 +599,8 @@ public class UiObject {
      *
      * The {@link UiSelector} selector of this object must reference a UI element that is editable.
      *
-     * When you call this method, the method first simulates a {@link #click()} on
-     * editable field to set focus. The method then clears the field's contents
-     * and injects your specified text into the field.
+     * When you call this method, the method sets focus on the editable field, clears its existing
+     * content, then injects your specified text into the field.
      *
      * If you want to capture the original contents of the field, call {@link #getText()} first.
      * You can then modify the text and use this method to update the field.
@@ -611,6 +611,10 @@ public class UiObject {
      * @since API Level 16
      */
     public boolean setText(String text) throws UiObjectNotFoundException {
+        // per framework convention, setText with null means clearing it
+        if (text == null) {
+            text = "";
+        }
         Tracer.trace(text);
         clearTextField();
         return getInteractionController().sendText(text);
@@ -621,16 +625,8 @@ public class UiObject {
      *
      * The {@link UiSelector} of this object must reference a UI element that is editable.
      *
-     * When you call this method, the method first sets focus at the start edge of the field.
-     * The method then simulates a long-press to select the existing text, and deletes the
-     * selected text.
-     *
-     * If a "Select-All" option is displayed, the method will automatically attempt to use it
-     * to ensure full text selection.
-     *
-     * Note that it is possible that not all the text in the field is selected; for example,
-     * if the text contains separators such as spaces, slashes, at symbol etc.
-     * Also, not all editable fields support the long-press functionality.
+     * When you call this method, the method sets focus on the editable field, selects all of its
+     * existing content, and clears it by sending a DELETE key press
      *
      * @throws UiObjectNotFoundException
      * @since API Level 16
@@ -642,16 +638,26 @@ public class UiObject {
         if(node == null) {
             throw new UiObjectNotFoundException(getSelector().toString());
         }
-        Rect rect = getVisibleBounds(node);
-        getInteractionController().longTapNoSync(rect.left + 20, rect.centerY());
-        // check if the edit menu is open
-        UiObject selectAll = new UiObject(new UiSelector().descriptionContains("Select all"));
-        if(selectAll.waitForExists(50))
-            selectAll.click();
-        // wait for the selection
-        SystemClock.sleep(250);
-        // delete it
-        getInteractionController().sendKey(KeyEvent.KEYCODE_DEL, 0);
+        CharSequence text = node.getText();
+        // do nothing if already empty
+        if (text != null && text.length() > 0) {
+            Bundle selectionArgs = new Bundle();
+            // select all of the existing text
+            selectionArgs.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0);
+            selectionArgs.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT,
+                    text.length());
+            boolean ret = node.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+            if (!ret) {
+                Log.w(LOG_TAG, "ACTION_FOCUS on text field failed.");
+            }
+            ret = node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION,
+                    selectionArgs);
+            if (!ret) {
+                Log.w(LOG_TAG, "ACTION_SET_SELECTION on text field failed.");
+            }
+            // now delete all
+            getInteractionController().sendKey(KeyEvent.KEYCODE_DEL, 0);
+        }
     }
 
     /**
