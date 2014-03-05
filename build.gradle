@@ -1,0 +1,38 @@
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+task generateBuildConstants {
+    ext.inputFile = file('BuildConstants.java.in')
+    ext.outputDir = file("$buildDir/buildconstants")
+    ext.outputFile = new File(outputDir, 'BuildConstants.java')
+
+    inputs.file(inputFile)
+    outputs.dir(outputDir)
+
+    doFirst {
+        outputDir.mkdirs()
+    }
+    doLast {
+        def BUILD_NUMBER = System.env.BUILD_NUMBER
+        if (!BUILD_NUMBER) {
+            BUILD_NUMBER = "eng.${System.env.USER}"
+        }
+        def text = inputFile.text.replace('%BUILD_NUMBER%', BUILD_NUMBER)
+        outputFile.text = text
+    }
+}
+
+compileJava.dependsOn generateBuildConstants
+sourceSets.main.java.srcDir generateBuildConstants.outputDir
+
+dependencies {
+    compile getAndroidPrebuilt('19')
+    compile project(':external:junit')
+}
