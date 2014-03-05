@@ -48,6 +48,16 @@ public class UiAutomatorInstrumentationTestRunner extends InstrumentationTestRun
         super.onStart();
     }
 
+
+    /**
+     * Perform initialization specific to UiAutomator test. It sets up the test case so that
+     * it can access the UiDevice and gives it access to the command line arguments.
+     * @param test UiAutomatorTestCase to initialize.
+     */
+    protected void initializeUiAutomatorTest(UiAutomatorTestCase test) {
+        test.initialize(getArguments());
+    }
+
     @Override
     protected AndroidTestRunner getAndroidTestRunner() {
         AndroidTestRunner testRunner = super.getAndroidTestRunner();
@@ -55,7 +65,7 @@ public class UiAutomatorInstrumentationTestRunner extends InstrumentationTestRun
             @Override
             public void startTest(Test test) {
                 if (test instanceof UiAutomatorTestCase) {
-                    ((UiAutomatorTestCase)test).initialize(getArguments());
+                    initializeUiAutomatorTest((UiAutomatorTestCase)test);
                 }
             }
 
