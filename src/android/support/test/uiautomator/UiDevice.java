@@ -21,7 +21,6 @@ import android.app.UiAutomation;
 import android.app.UiAutomation.AccessibilityEventFilter;
 import android.graphics.Point;
 import android.os.Build;
-import android.os.Environment;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
@@ -65,6 +64,16 @@ public class UiDevice {
     // reference to self
     private static UiDevice sDevice;
     private static Instrumentation sInstrumentation;
+
+    /**
+     * A forward-looking API Level for development platform builds
+     *
+     * This will be the actual API level on a released platform build, and will be last released
+     * API Level + 1 on development platform build
+     * @hide
+     */
+    static final int API_LEVEL_ACTUAL = Build.VERSION.SDK_INT
+            + ("REL".equals(Build.VERSION.CODENAME) ? 0 : 1);
 
     /**
      * @deprecated Should use {@link UiDevice(InstrumentationUiAutomatorBridge)} instead.
