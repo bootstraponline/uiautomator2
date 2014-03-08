@@ -161,7 +161,7 @@ class InteractionController {
             return mUiAutomatorBridge.executeCommandAndWaitForAccessibilityEvent(command, filter,
                     timeout);
         } catch (TimeoutException e) {
-            Log.w(LOG_TAG, "runAndwaitForEvent timedout waiting for events");
+            Log.w(LOG_TAG, "runAndwaitForEvents timed out waiting for events");
             return null;
         } catch (Exception e) {
             Log.e(LOG_TAG, "exception from executeCommandAndWaitForAccessibilityEvent", e);
