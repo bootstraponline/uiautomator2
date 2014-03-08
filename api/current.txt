@@ -20,6 +20,7 @@ package android.support.test.uiautomator {
 
   public class UiAutomatorInstrumentationTestRunner extends android.test.InstrumentationTestRunner {
     ctor public UiAutomatorInstrumentationTestRunner();
+    method protected void initializeUiAutomatorTest(android.support.test.uiautomator.UiAutomatorTestCase);
   }
 
   public class UiAutomatorTestCase extends android.test.InstrumentationTestCase {
