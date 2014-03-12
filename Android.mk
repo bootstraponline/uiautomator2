@@ -17,6 +17,8 @@
 LOCAL_PATH:= $(call my-dir)
 
 uiautomator_internal_api_file := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/ub_uiautomator_api.txt
+uiautomator_internal_removed_api_file := \
+    $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/ub_uiautomator_removed_api.txt
 
 ###############################################
 # Build core library
@@ -51,7 +53,8 @@ LOCAL_MODULE_CLASS := DOCS
 LOCAL_DROIDDOC_HTML_DIR :=
 LOCAL_DROIDDOC_OPTIONS:= \
     -stubpackages android.support.test.uiautomator \
-    -api $(uiautomator_internal_api_file)
+    -api $(uiautomator_internal_api_file) \
+    -removedApi $(uiautomator_internal_removed_api_file)
 LOCAL_DROIDDOC_CUSTOM_TEMPLATE_DIR := build/tools/droiddoc/templates-sdk
 
 LOCAL_MODULE := ub-uiautomator-docs
@@ -80,6 +83,8 @@ $(eval $(call check-api, \
     ub-uiautomator-checkapi-last, \
     $(uiautomator_api_dir)/$(last_released_sdk_version).txt, \
     $(uiautomator_internal_api_file), \
+    $(uiautomator_api_dir)/removed.txt, \
+    $(uiautomator_internal_removed_api_file), \
     $(checkapi_last_error_level_flags), \
     cat $(LOCAL_PATH)/apicheck_msg_last.txt, \
     $(uiautomator_library), \
@@ -97,6 +102,8 @@ $(eval $(call check-api, \
     ub-uiautomator-checkapi-current, \
     $(uiautomator_api_dir)/current.txt, \
     $(uiautomator_internal_api_file), \
+    $(uiautomator_api_dir)/removed.txt, \
+    $(uiautomator_internal_removed_api_file), \
     $(checkapi_current_error_level_flags), \
     cat $(LOCAL_PATH)/apicheck_msg_current.txt, \
     $(uiautomator_library), \
@@ -106,7 +113,9 @@ $(eval $(call check-api, \
 update-ub-uiautomator-api: PRIVATE_API_DIR := $(uiautomator_api_dir)
 update-ub-uiautomator-api: $(uiautomator_internal_api_file) | $(ACP)
 	@echo Copying uiautomator current.txt
-	$(hide) $(ACP) $< $(PRIVATE_API_DIR)/current.txt
+	$(hide) $(ACP) $(uiautomator_internal_api_file) $(PRIVATE_API_DIR)/current.txt
+	@echo Copying uiautomator removed.txt
+	$(hide) $(ACP) $(uiautomator_internal_removed_api_file) $(PRIVATE_API_DIR)/removed.txt
 
 ###############################################
 # clean up temp vars
