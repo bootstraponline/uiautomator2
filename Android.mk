@@ -111,11 +111,12 @@ $(eval $(call check-api, \
 
 .PHONY: update-ub-uiautomator-api
 update-ub-uiautomator-api: PRIVATE_API_DIR := $(uiautomator_api_dir)
+update-ub-uiautomator-api: PRIVATE_REMOVED_API_FILE := $(uiautomator_internal_removed_api_file)
 update-ub-uiautomator-api: $(uiautomator_internal_api_file) | $(ACP)
 	@echo Copying uiautomator current.txt
-	$(hide) $(ACP) $(uiautomator_internal_api_file) $(PRIVATE_API_DIR)/current.txt
+	$(hide) $(ACP) $< $(PRIVATE_API_DIR)/current.txt
 	@echo Copying uiautomator removed.txt
-	$(hide) $(ACP) $(uiautomator_internal_removed_api_file) $(PRIVATE_API_DIR)/removed.txt
+	$(hide) $(ACP) $(PRIVATE_REMOVED_API_FILE) $(PRIVATE_API_DIR)/removed.txt
 
 ###############################################
 # clean up temp vars
