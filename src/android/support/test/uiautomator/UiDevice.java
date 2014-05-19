@@ -33,8 +33,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -43,7 +45,7 @@ import java.util.concurrent.TimeoutException;
  * such as pressing the d-pad or pressing the Home and Menu buttons.
  * @since API Level 16
  */
-public class UiDevice {
+public class UiDevice implements Searchable {
 
     private static final String LOG_TAG = UiDevice.class.getSimpleName();
 
@@ -61,9 +63,12 @@ public class UiDevice {
     // provides access the {@link QueryController} and {@link InteractionController}
     private InstrumentationUiAutomatorBridge mUiAutomationBridge;
 
-    // reference to self
-    private static UiDevice sDevice;
-    private static Instrumentation sInstrumentation;
+    // Singleton instance
+    private static UiDevice sInstance;
+
+    // Get wait functionality from a mixin
+    private WaitMixin<UiDevice> mWaitMixin = new WaitMixin<UiDevice>(this);
+
 
     /**
      * A forward-looking API Level for development platform builds
@@ -76,13 +81,16 @@ public class UiDevice {
             + ("REL".equals(Build.VERSION.CODENAME) ? 0 : 1);
 
     /**
-     * @deprecated Should use {@link UiDevice(InstrumentationUiAutomatorBridge)} instead.
+     * @deprecated Should use {@link UiDevice#UiDevice(InstrumentationUiAutomatorBridge)} instead.
      */
     @Deprecated
     private UiDevice() {}
 
-    private UiDevice(InstrumentationUiAutomatorBridge uiAutomatorBridge) {
-        mUiAutomationBridge = uiAutomatorBridge;
+    /** Private constructor. Clients should use {@link UiDevice#getInstance(Context)}. */
+    private UiDevice(Instrumentation instrumentation) {
+        mUiAutomationBridge = new InstrumentationUiAutomatorBridge(
+                instrumentation.getContext(),
+                instrumentation.getUiAutomation());
     }
 
     /**
@@ -100,7 +108,7 @@ public class UiDevice {
 
     /**
      * Provides access the {@link QueryController} and {@link InteractionController}
-     * @return {@link ShellUiAutomatorBridge}
+     * @return {@link InstrumentationUiAutomatorBridge}
      */
     InstrumentationUiAutomatorBridge getAutomatorBridge() {
         if (mUiAutomationBridge == null) {
@@ -117,6 +125,93 @@ public class UiDevice {
      */
     public UiObject findObject(UiSelector selector) {
         return new UiObject(this, selector);
+    }
+
+    /** Returns whether there is a match for the given {@code selector} criteria. */
+    public boolean hasObject(BySelector selector) {
+        QueryController qc = getAutomatorBridge().getQueryController();
+        AccessibilityNodeInfo node = ByMatcher.findMatch(qc.getRootNode(), selector);
+        if (node != null) {
+            node.recycle();
+            return true;
+        }
+        return false;
+    }
+
+    /** Returns the first object to match the {@code selector} criteria. */
+    public UiObject2 findObject(BySelector selector) {
+        QueryController qc = getAutomatorBridge().getQueryController();
+        AccessibilityNodeInfo node = ByMatcher.findMatch(qc.getRootNode(), selector);
+        return node != null ? new UiObject2(this, selector, node) : null;
+    }
+
+    /** Returns all objects that match the {@code selector} criteria. */
+    public Collection<UiObject2> findObjects(BySelector selector) {
+        Collection<UiObject2> ret = new ArrayList<UiObject2>();
+
+        QueryController qc = getAutomatorBridge().getQueryController();
+        for (AccessibilityNodeInfo node : ByMatcher.findMatches(qc.getRootNode(), selector)) {
+            ret.add(new UiObject2(this, selector, node));
+        }
+
+        return ret;
+    }
+
+
+    /**
+     * Waits for given the {@code condition} to be met.
+     *
+     * @param condition The {@link SearchCondition} to evaluate.
+     * @param timeout Maximum amount of time to wait in milliseconds.
+     * @return The final result returned by the condition.
+     * @throws TimeoutException If the timeout expires.
+     */
+    public <R> R wait(SearchCondition<R> condition, long timeout) throws TimeoutException {
+        return mWaitMixin.wait(condition, timeout);
+    }
+
+    /**
+     * Performs the provided {@code action} and waits for the {@code condition} to be met.
+     *
+     * @param action The {@link Runnable} action to perform.
+     * @param condition The {@link EventCondition} to evaluate.
+     * @param timeout Maximum amount of time to wait in milliseconds.
+     * @return The final result returned by the condition.
+     * @throws TimeoutException If the timeout expires.
+     */
+    public <R> R performActionAndWait(Runnable action, EventCondition<R> condition, long timeout)
+            throws TimeoutException {
+
+        AccessibilityEvent event = null;
+        try {
+            event = getAutomatorBridge().executeCommandAndWaitForAccessibilityEvent(
+                action, new EventForwardingFilter(condition), timeout);
+        } catch (TimeoutException e) { }
+
+        if (event != null) {
+            event.recycle();
+        }
+
+        R result = condition.getResult();
+        if (result == null || result.equals(false)) {
+            throw new TimeoutException();
+        }
+        return condition.getResult();
+    }
+
+    /** Proxy class which acts as an {@link AccessibilityEventFilter} and forwards calls to an
+     * {@link EventCondition} instance. */
+    private static class EventForwardingFilter implements AccessibilityEventFilter {
+        private EventCondition mCondition;
+
+        public EventForwardingFilter(EventCondition condition) {
+            mCondition = condition;
+        }
+
+        @Override
+        public boolean accept(AccessibilityEvent event) {
+            return mCondition.apply(event);
+        }
     }
 
     /**
@@ -144,10 +239,10 @@ public class UiDevice {
      */
     @Deprecated
     public static UiDevice getInstance() {
-        if (sDevice == null) {
-            sDevice = new UiDevice();
+        if (sInstance == null) {
+            throw new IllegalStateException("UiDevice singleton not initialized");
         }
-        return sDevice;
+        return sInstance;
     }
 
     /**
@@ -156,18 +251,10 @@ public class UiDevice {
      * @return UiDevice instance
      */
     public static UiDevice getInstance(Instrumentation instrumentation) {
-        if (sInstrumentation != instrumentation && sInstrumentation != null) {
-            throw new IllegalStateException("TODO");
+        if (sInstance == null) {
+            sInstance = new UiDevice(instrumentation);
         }
-
-        if (sDevice == null) {
-            sInstrumentation = instrumentation;
-            sDevice = new UiDevice(new InstrumentationUiAutomatorBridge(
-                instrumentation.getContext(),
-                instrumentation.getUiAutomation()));
-        }
-
-        return sDevice;
+        return sInstance;
     }
 
     /**

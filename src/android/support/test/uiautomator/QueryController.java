@@ -138,6 +138,11 @@ class QueryController {
         return findAccessibilityNodeInfo(selector, false);
     }
 
+    AccessibilityNodeInfo findAccessibilityNodeInfo(BySelector selector) {
+        mUiAutomatorBridge.waitForIdle();
+        return ByMatcher.findMatch(getRootNode(), selector);
+    }
+
     protected AccessibilityNodeInfo findAccessibilityNodeInfo(UiSelector selector,
             boolean isCounting) {
         mUiAutomatorBridge.waitForIdle();
@@ -162,7 +167,7 @@ class QueryController {
      * retry every 250ms for up to 1000ms.
      * @return null if no root node is obtained
      */
-    protected AccessibilityNodeInfo getRootNode() {
+    AccessibilityNodeInfo getRootNode() {
         final int maxRetry = 4;
         final long waitInterval = 250;
         AccessibilityNodeInfo rootNode = null;

@@ -59,6 +59,7 @@ public class UiAutomatorTestCase extends InstrumentationTestCase {
      * @since API Level 16
      * @deprecated Use {@link Instrumentation#sendStatus(int, Bundle)} instead
      */
+    @Deprecated
     public IAutomationSupport getAutomationSupport() {
         if (mAutomationSupport == null) {
             mAutomationSupport = new InstrumentationAutomationSupport(getInstrumentation());
@@ -82,9 +83,8 @@ public class UiAutomatorTestCase extends InstrumentationTestCase {
             getInstrumentation().getUiAutomation().setRunAsMonkey(Boolean.valueOf(monkeyVal));
         }
 
-        UiDevice.getInstance().initialize(new InstrumentationUiAutomatorBridge(
-                getInstrumentation().getContext(),
-                getInstrumentation().getUiAutomation()));
+        // Pre-initialize UiDevice
+        UiDevice.getInstance(getInstrumentation());
     }
 
     /**

@@ -1,5 +1,82 @@
 package android.support.test.uiautomator {
 
+  public class By {
+    method public static android.support.test.uiautomator.BySelector checkable(boolean);
+    method public static android.support.test.uiautomator.BySelector checked(boolean);
+    method public static android.support.test.uiautomator.BySelector clazz(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector clazz(java.lang.String, java.lang.String);
+    method public static android.support.test.uiautomator.BySelector clazz(java.lang.Class);
+    method public static android.support.test.uiautomator.BySelector clazz(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.BySelector clickable(boolean);
+    method public static android.support.test.uiautomator.BySelector copy(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.BySelector depth(int);
+    method public static android.support.test.uiautomator.BySelector desc(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector desc(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.BySelector descContains(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector descEndsWith(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector descStartsWith(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector enabled(boolean);
+    method public static android.support.test.uiautomator.BySelector focusable(boolean);
+    method public static android.support.test.uiautomator.BySelector focused(boolean);
+    method public static android.support.test.uiautomator.BySelector hasChild(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.BySelector hasDescendant(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.BySelector hasDescendant(android.support.test.uiautomator.BySelector, int);
+    method public static android.support.test.uiautomator.BySelector longClickable(boolean);
+    method public static android.support.test.uiautomator.BySelector pkg(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector pkg(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.BySelector res(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector res(java.lang.String, java.lang.String);
+    method public static android.support.test.uiautomator.BySelector res(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.BySelector scrollable(boolean);
+    method public static android.support.test.uiautomator.BySelector selected(boolean);
+    method public static android.support.test.uiautomator.BySelector text(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector text(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.BySelector textContains(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector textEndsWith(java.lang.String);
+    method public static android.support.test.uiautomator.BySelector textStartsWith(java.lang.String);
+  }
+
+  public class BySelector {
+    method public android.support.test.uiautomator.BySelector checkable(boolean);
+    method public android.support.test.uiautomator.BySelector checked(boolean);
+    method public android.support.test.uiautomator.BySelector clazz(java.lang.String);
+    method public android.support.test.uiautomator.BySelector clazz(java.lang.String, java.lang.String);
+    method public android.support.test.uiautomator.BySelector clazz(java.lang.Class);
+    method public android.support.test.uiautomator.BySelector clazz(java.util.regex.Pattern);
+    method public android.support.test.uiautomator.BySelector clickable(boolean);
+    method public android.support.test.uiautomator.BySelector depth(int);
+    method public android.support.test.uiautomator.BySelector depth(int, int);
+    method public android.support.test.uiautomator.BySelector desc(java.lang.String);
+    method public android.support.test.uiautomator.BySelector desc(java.util.regex.Pattern);
+    method public android.support.test.uiautomator.BySelector descContains(java.lang.String);
+    method public android.support.test.uiautomator.BySelector descEndsWith(java.lang.String);
+    method public android.support.test.uiautomator.BySelector descStartsWith(java.lang.String);
+    method public android.support.test.uiautomator.BySelector enabled(boolean);
+    method public android.support.test.uiautomator.BySelector focusable(boolean);
+    method public android.support.test.uiautomator.BySelector focused(boolean);
+    method public android.support.test.uiautomator.BySelector hasChild(android.support.test.uiautomator.BySelector);
+    method public android.support.test.uiautomator.BySelector hasDescendant(android.support.test.uiautomator.BySelector);
+    method public android.support.test.uiautomator.BySelector hasDescendant(android.support.test.uiautomator.BySelector, int);
+    method public android.support.test.uiautomator.BySelector longClickable(boolean);
+    method public android.support.test.uiautomator.BySelector maxDepth(int);
+    method public android.support.test.uiautomator.BySelector minDepth(int);
+    method public android.support.test.uiautomator.BySelector pkg(java.lang.String);
+    method public android.support.test.uiautomator.BySelector pkg(java.util.regex.Pattern);
+    method public android.support.test.uiautomator.BySelector res(java.lang.String);
+    method public android.support.test.uiautomator.BySelector res(java.lang.String, java.lang.String);
+    method public android.support.test.uiautomator.BySelector res(java.util.regex.Pattern);
+    method public android.support.test.uiautomator.BySelector scrollable(boolean);
+    method public android.support.test.uiautomator.BySelector selected(boolean);
+    method public android.support.test.uiautomator.BySelector text(java.lang.String);
+    method public android.support.test.uiautomator.BySelector text(java.util.regex.Pattern);
+    method public android.support.test.uiautomator.BySelector textContains(java.lang.String);
+    method public android.support.test.uiautomator.BySelector textEndsWith(java.lang.String);
+    method public android.support.test.uiautomator.BySelector textStartsWith(java.lang.String);
+  }
+
+   abstract class Condition {
+  }
+
   public final class Configurator {
     method public long getActionAcknowledgmentTimeout();
     method public static android.support.test.uiautomator.Configurator getInstance();
@@ -14,8 +91,30 @@ package android.support.test.uiautomator {
     method public android.support.test.uiautomator.Configurator setWaitForSelectorTimeout(long);
   }
 
+  public final class Direction extends java.lang.Enum {
+    method public static android.support.test.uiautomator.Direction reverse(android.support.test.uiautomator.Direction);
+    method public static android.support.test.uiautomator.Direction valueOf(java.lang.String);
+    method public static final android.support.test.uiautomator.Direction[] values();
+    enum_constant public static final android.support.test.uiautomator.Direction DOWN;
+    enum_constant public static final android.support.test.uiautomator.Direction LEFT;
+    enum_constant public static final android.support.test.uiautomator.Direction RIGHT;
+    enum_constant public static final android.support.test.uiautomator.Direction UP;
+  }
+
+  public abstract class EventCondition extends android.support.test.uiautomator.Condition {
+    ctor public EventCondition();
+  }
+
   public abstract interface IAutomationSupport {
     method public abstract void sendStatus(int, android.os.Bundle);
+  }
+
+  public abstract class SearchCondition extends android.support.test.uiautomator.Condition {
+    ctor public SearchCondition();
+  }
+
+  public class StaleObjectException extends java.lang.RuntimeException {
+    ctor public StaleObjectException();
   }
 
   public class UiAutomatorInstrumentationTestRunner extends android.test.InstrumentationTestRunner {
@@ -45,6 +144,8 @@ package android.support.test.uiautomator {
     method public boolean drag(int, int, int, int, int);
     method public void dumpWindowHierarchy(java.lang.String);
     method public android.support.test.uiautomator.UiObject findObject(android.support.test.uiautomator.UiSelector);
+    method public android.support.test.uiautomator.UiObject2 findObject(android.support.test.uiautomator.BySelector);
+    method public java.util.Collection<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
     method public void freezeRotation() throws android.os.RemoteException;
     method public deprecated java.lang.String getCurrentActivityName();
     method public java.lang.String getCurrentPackageName();
@@ -57,11 +158,13 @@ package android.support.test.uiautomator {
     method public java.lang.String getLastTraversedText();
     method public java.lang.String getProductName();
     method public boolean hasAnyWatcherTriggered();
+    method public boolean hasObject(android.support.test.uiautomator.BySelector);
     method public boolean hasWatcherTriggered(java.lang.String);
     method public boolean isNaturalOrientation();
     method public boolean isScreenOn() throws android.os.RemoteException;
     method public boolean openNotification();
     method public boolean openQuickSettings();
+    method public R performActionAndWait(java.lang.Runnable, android.support.test.uiautomator.EventCondition<R>, long) throws java.util.concurrent.TimeoutException;
     method public boolean pressBack();
     method public boolean pressDPadCenter();
     method public boolean pressDPadDown();
@@ -90,6 +193,7 @@ package android.support.test.uiautomator {
     method public boolean takeScreenshot(java.io.File);
     method public boolean takeScreenshot(java.io.File, float, int);
     method public void unfreezeRotation() throws android.os.RemoteException;
+    method public R wait(android.support.test.uiautomator.SearchCondition<R>, long) throws java.util.concurrent.TimeoutException;
     method public void waitForIdle();
     method public void waitForIdle(long);
     method public boolean waitForWindowUpdate(java.lang.String, long);
@@ -147,6 +251,56 @@ package android.support.test.uiautomator {
     field protected static final long WAIT_FOR_SELECTOR_POLL = 1000L; // 0x3e8L
     field protected static final deprecated long WAIT_FOR_SELECTOR_TIMEOUT = 10000L; // 0x2710L
     field protected static final long WAIT_FOR_WINDOW_TMEOUT = 5500L; // 0x157cL
+  }
+
+  public class UiObject2 {
+    method public void clear();
+    method public void click();
+    method public void clickAndWait(android.support.test.uiautomator.EventCondition, long) throws java.util.concurrent.TimeoutException;
+    method public void drag(android.graphics.Point);
+    method public void drag(android.graphics.Point, int);
+    method public android.support.test.uiautomator.UiObject2 findObject(android.support.test.uiautomator.BySelector);
+    method public java.util.Collection<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
+    method public boolean fling(android.support.test.uiautomator.Direction);
+    method public boolean fling(android.support.test.uiautomator.Direction, int);
+    method public java.lang.String getApplicationPackage();
+    method public int getChildCount();
+    method public java.util.Collection<android.support.test.uiautomator.UiObject2> getChildren();
+    method public java.lang.String getClassName();
+    method public java.lang.String getContentDescription();
+    method public java.lang.String getResourceName();
+    method public java.lang.String getText();
+    method public android.graphics.Rect getVisibleBounds();
+    method public android.graphics.Point getVisibleCenter();
+    method public boolean hasObject(android.support.test.uiautomator.BySelector);
+    method public boolean isCheckable();
+    method public boolean isChecked();
+    method public boolean isClickable();
+    method public boolean isEnabled();
+    method public boolean isFocusable();
+    method public boolean isFocused();
+    method public boolean isLongClickable();
+    method public boolean isScrollable();
+    method public boolean isSelected();
+    method public void longClick();
+    method public void pinchClose(float);
+    method public void pinchClose(float, int);
+    method public void pinchOpen(float);
+    method public void pinchOpen(float, int);
+    method public void recycle();
+    method public boolean scroll(android.support.test.uiautomator.Direction, float);
+    method public boolean scroll(android.support.test.uiautomator.Direction, float, int);
+    method public void setGestureMargin(int);
+    method public void setGestureMargins(int, int, int, int);
+    method public void setText(java.lang.String);
+    method public void swipe(android.support.test.uiautomator.Direction, float);
+    method public void swipe(android.support.test.uiautomator.Direction, float, int);
+    method public R wait(android.support.test.uiautomator.UiObject2Condition<R>, long) throws java.util.concurrent.TimeoutException;
+    method public R wait(android.support.test.uiautomator.SearchCondition<R>, long) throws java.util.concurrent.TimeoutException;
+  }
+
+  public abstract class UiObject2Condition extends android.support.test.uiautomator.Condition {
+    ctor public UiObject2Condition();
   }
 
   public class UiObjectNotFoundException extends java.lang.Exception {
@@ -219,6 +373,38 @@ package android.support.test.uiautomator {
 
   public abstract interface UiWatcher {
     method public abstract boolean checkForCondition();
+  }
+
+  public class Until {
+    ctor public Until();
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> checkable(boolean);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> checked(boolean);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> clickable(boolean);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descContains(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descEndsWith(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descEquals(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descMatches(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descMatches(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descStartsWith(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> enabled(boolean);
+    method public static android.support.test.uiautomator.SearchCondition<android.support.test.uiautomator.UiObject2> findObject(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.SearchCondition<java.util.Collection<android.support.test.uiautomator.UiObject2>> findObjects(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> focusable(boolean);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> focused(boolean);
+    method public static android.support.test.uiautomator.SearchCondition<java.lang.Boolean> gone(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.SearchCondition<java.lang.Boolean> hasObject(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> longClickable(boolean);
+    method public static android.support.test.uiautomator.EventCondition<java.lang.Boolean> newWindow();
+    method public static android.support.test.uiautomator.EventCondition<java.lang.Boolean> scrollFinished(android.support.test.uiautomator.Direction);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> scrollable(boolean);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> selected(boolean);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textContains(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textEndsWith(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textEquals(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textMatches(java.util.regex.Pattern);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textMatches(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textNotEquals(java.lang.String);
+    method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> textStartsWith(java.lang.String);
   }
 
 }
