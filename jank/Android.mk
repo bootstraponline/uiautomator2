@@ -23,5 +23,3 @@ LOCAL_MODULE := janktesthelper
 LOCAL_SDK_VERSION := current
 
 include $(BUILD_STATIC_JAVA_LIBRARY)
-
-include $(LOCAL_PATH)/tests/Android.mk
