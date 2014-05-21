@@ -167,7 +167,7 @@ public class JankTestBase extends InstrumentationTestCase {
     }
 
     /** Returns a {@link Bundle} containing the command line parameters. */
-    private Bundle getArguments() {
+    protected final Bundle getArguments() {
         if (arguments == null) {
             Instrumentation instrumentation = getInstrumentation();
             // This hack only works for InstrumentationTestRunner subclasses
