@@ -16,12 +16,15 @@
 
 package android.support.test.jank;
 
+import android.util.Log;
 import android.view.FrameStats;
 
 /** A {@link JankResult} contains the results of a jank monitoring session. This includes the number
  * of frames analyzed, the number of frames that were janky, the average frames per second, as well
  * as the nomalized longest frame time.*/
 public class JankResult {
+
+    private static final String TAG = JankResult.class.getSimpleName();
 
     // Maximum normalized error in frame duration before the frame is considered janky
     private static final double MAX_ERROR = 0.5f;
@@ -51,7 +54,13 @@ public class JankResult {
         long totalDuration = 0;
         // Skip first frame
         for (int i = 2; i < frameCount; i++) {
-            // TODO: Handle fenced frames that have not been presented. Either skip or throw.
+            // Handle frames that have not been presented.
+            if (stats.getFramePresentedTimeNano(i) == -1) {
+                // The animation must not have completed. Warn and break out of the loop.
+                Log.w(TAG, "Skipping fenced frame.");
+                frameCount = i;
+                break;
+            }
             long frameDuration = stats.getFramePresentedTimeNano(i) -
                     stats.getFramePresentedTimeNano(i - 1);
             double normalized = (double)frameDuration / refreshPeriod;
