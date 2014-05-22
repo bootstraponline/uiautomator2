@@ -58,22 +58,22 @@ public class JankTestBase extends InstrumentationTestCase {
 
 
     /** Called once before executing a test method. */
-    public void beforeTest() {
+    public void beforeTest() throws Exception {
         // Default implementation. Do nothing.
     }
 
     /** Called before each iteration of the test method. */
-    public void beforeLoop() {
+    public void beforeLoop() throws Exception {
         // Default implementation. Do nothing.
     }
 
     /** Called after each iteration of the test method. */
-    public void afterLoop() {
+    public void afterLoop() throws Exception {
         // Default implementation. Do nothing.
     }
 
     /** Called once after all iterations have completed. */
-    public void afterTest() {
+    public void afterTest() throws Exception {
         // Default implementation. Do nothing.
     }
 
