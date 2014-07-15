@@ -1,38 +1,200 @@
-apply plugin: 'java'
+apply plugin: 'android-library'
+apply plugin: 'maven'
+apply plugin: 'dist'
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src']
-        }
+group = 'com.android.support.test'
+version = '2.0.0'
+
+ext {
+    extraVersion = 6
+    supportRepoOut = new File(buildDir, 'support_repo')
+    miscDir = new File(buildDir, 'misc')
+}
+
+// Android Library configuration
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.0.0"
+
+    sourceSets {
+        main.manifest.srcFile 'AndroidManifest.xml'
+        main.java.srcDirs 'src'
+    }
+
+    defaultConfig {
+        minSdkVersion 18
     }
 }
 
-task generateBuildConstants {
-    ext.inputFile = file('BuildConstants.java.in')
-    ext.outputDir = file("$buildDir/buildconstants")
-    ext.outputFile = new File(outputDir, 'BuildConstants.java')
-
-    inputs.file(inputFile)
-    outputs.dir(outputDir)
-
-    doFirst {
-        outputDir.mkdirs()
-    }
-    doLast {
-        def BUILD_NUMBER = System.env.BUILD_NUMBER
-        if (!BUILD_NUMBER) {
-            BUILD_NUMBER = "eng.${System.env.USER}"
-        }
-        def text = inputFile.text.replace('%BUILD_NUMBER%', BUILD_NUMBER)
-        outputFile.text = text
-    }
+configurations {
+    doclava
 }
-
-compileJava.dependsOn generateBuildConstants
-sourceSets.main.java.srcDir generateBuildConstants.outputDir
 
 dependencies {
-    compile getAndroidPrebuilt('19')
-    compile project(':external:junit')
+    doclava project(':doclava')
+}
+
+// Add Javadoc tasks for all build variants.
+android.libraryVariants.all { variant ->
+    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc,
+            dependsOn: [variant.javaCompile, configurations.doclava]) {
+        title = null
+        description "Generates Javadoc for $variant.name."
+        source = variant.javaCompile.source
+        def platformsDir = "${android.sdkDirectory}/platforms/"
+        def androidJar = "${platformsDir}/${android.compileSdkVersion}/android.jar"
+        classpath = files(variant.javaCompile.classpath.files) + files(androidJar)
+        destinationDir = file("${project.docsDir}/${variant.name}/javadoc")
+        options.encoding = "UTF-8"
+        options.doclet = "com.google.doclava.Doclava"
+        options.bootClasspath = files(android.plugin.bootClasspath).asType(List)
+        options.docletpath = configurations.doclava.files.asType(List)
+        options.addStringOption("templatedir", "${rootDir}/build/tools/droiddoc/templates-sdk")
+        options.addStringOption("api", "${miscDir}/${variant.name}/uiautomator_api.txt")
+        options.addStringOption("removedApi", "${miscDir}/${variant.name}/uiautomator_removed.txt")
+        options.addStringOption("stubpackages", "android.support.test.uiautomator")
+    }
+
+    task("package${variant.name.capitalize()}Javadoc", type: Jar,
+            dependsOn: "generate${variant.name.capitalize()}Javadoc") {
+        classifier = "javadoc"
+        from tasks["generate${variant.name.capitalize()}Javadoc"].destinationDir
+        destinationDir = file("${project.docsDir}/${variant.name}")
+    }
+}
+
+// Check API against current version
+task apiCheckCurrent(type: JavaExec) {
+    main = "com.google.doclava.apicheck.ApiCheck"
+    classpath = configurations.doclava
+    args('api/current.txt', "${miscDir}/release/uiautomator_api.txt")
+    args("api/removed.txt", "${miscDir}/release/uiautomator_removed.txt")
+    args("error", "2", "error", "3", "error", "4", "error", "5", "error", "6")
+    args("error", "7", "error", "8", "error", "9", "error", "10", "error", "11")
+    args("error", "12", "error", "13", "error", "14", "error", "15", "error", "16")
+    args("error", "17", "error", "18", "error", "19", "error", "20", "error", "21")
+    args("error", "23", "error", "24", "error", "25")
+}
+
+// Check API against previously released version
+task apiCheckLast(type: JavaExec) {
+    main = "com.google.doclava.apicheck.ApiCheck"
+    classpath = configurations.doclava
+    args('api/0.txt', "${miscDir}/release/uiautomator_api.txt")
+    args("api/removed.txt", "${miscDir}/uiautomator_removed.txt")
+    args("error", "2", "error", "3", "error", "4", "error", "5", "error", "6")
+    args("error", "7", "error", "8", "error", "9", "error", "10", "error", "11")
+    args("error", "12", "error", "13", "error", "14", "error", "15", "error", "16")
+    args("error", "17", "error", "18", "error", "19", "error", "20", "error", "21")
+    args("error", "23", "error", "24", "error", "25")
+}
+
+// Wrap up some final configuration
+afterEvaluate {
+
+    // Add the release javadocs to the archives configuration
+    artifacts {
+        archives packageReleaseJavadoc
+    }
+
+    // Define what should end up in dist
+    dist.file(packageReleaseJar.archivePath.getPath(), "${project.name}-${project.version}.jar")
+    dist.file(packageReleaseJavadoc.archivePath.getPath(), packageReleaseJavadoc.archiveName)
+    dist.file(createRepositoryZip.archivePath.getPath(), createRepositoryZip.archiveName)
+    dist.file(createRepositoryXml.outputFile.getPath(), createRepositoryXml.outputFile.getName())
+
+    // Setup dependencies for api check
+    apiCheckCurrent.dependsOn generateReleaseJavadoc
+    apiCheckLast.dependsOn generateReleaseJavadoc
+
+    // Ensure that these tasks are run before 'dist'
+    tasks['dist'].inputs.file(packageReleaseJar)
+    tasks['dist'].inputs.file(packageReleaseJavadoc)
+    tasks['dist'].inputs.file(createRepositoryZip)
+    tasks['dist'].inputs.file(createRepositoryXml)
+}
+
+
+// Tasks for updating the repository SDK extra
+
+// Seed repository with prebuilt artifacts
+task initializeRepository(type: Sync) {
+    from "$rootDir/prebuilts/maven_repo/android"
+    destinationDir project.supportRepoOut
+}
+
+import com.google.common.io.Files
+import com.google.common.base.Charsets
+
+// Create source.properties file in the repository folder
+task createSourceProperties(dependsOn: initializeRepository) << {
+    def sourceProp = """\
+Extra.VendorDisplay=Android
+Extra.Path=m2repository
+Archive.Arch=ANY
+Extra.NameDisplay=Android Support Repository
+Archive.Os=ANY
+Pkg.Revision=${project.extraVersion}.0.0
+Extra.VendorId=android
+"""
+
+    def outputFile = new File(project.supportRepoOut, "source.properties")
+    Files.write(sourceProp, outputFile, Charsets.UTF_8)
+}
+
+// Install uiautomator into the repository
+task uploadUiAutomator(type: Upload, dependsOn: [initializeRepository, assembleRelease]) {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            repository(url: uri("$project.supportRepoOut"))
+        }
+    }
+}
+
+// Zip repository for publishing as SDK extra
+task createRepositoryZip(type: Zip, dependsOn: [createSourceProperties, uploadUiAutomator]) {
+    from project.supportRepoOut
+    into 'm2repository'
+    archiveName = String.format("android_m2repository_r%02d.zip", project.extraVersion)
+}
+
+import com.google.common.hash.Hashing
+
+// Create xml file descripting the SDK extra
+task createRepositoryXml(dependsOn: createRepositoryZip) {
+    ext.outputFile = new File(project.buildDir, 'repo-extras.xml')
+    inputs.file(createRepositoryZip)
+    outputs.file(outputFile)
+
+    doLast {
+        def repoArchive = createRepositoryZip.archivePath
+        def repoArchiveName = createRepositoryZip.archiveName
+        def size = repoArchive.length()
+        def sha1 = Hashing.sha1().hashString(repoArchive.getAbsolutePath()).toString()
+
+        def xml = """\
+<sdk:sdk-addon xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \
+xmlns:sdk=\"http://schemas.android.com/sdk/android/addon/6\">
+  <sdk:extra>
+    <sdk:revision>
+      <sdk:major>${project.extraVersion}</sdk:major>
+    </sdk:revision>\n\
+    <sdk:vendor-display>Android</sdk:vendor-display>
+    <sdk:vendor-id>android</sdk:vendor-id>
+    <sdk:name-display>Local Maven repository for Support Libraries</sdk:name-display>
+    <sdk:path>m2repository</sdk:path>
+    <sdk:archives>
+      <sdk:archive os=\"any\" arch=\"any\">
+       <sdk:size>${size}</sdk:size>
+       <sdk:checksum type=\"sha1\">${sha1}</sdk:checksum>
+       <sdk:url>${repoArchiveName}</sdk:url>
+      </sdk:archive>
+    </sdk:archives>
+  </sdk:extra>
+</sdk:sdk-addon>\
+"""
+
+        Files.write(xml, outputFile, Charsets.UTF_8)
+    }
 }
