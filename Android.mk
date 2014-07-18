@@ -27,6 +27,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_MODULE := ub-uiautomator
 LOCAL_SDK_VERSION := current
+LOCAL_JAVACFLAGS := -source 6 -target 6
 
 gen := $(call intermediates-dir-for,JAVA_LIBRARIES,$(LOCAL_MODULE),,COMMON)/BuildConstants.java
 $(gen) : $(LOCAL_PATH)/BuildConstants.java.in
