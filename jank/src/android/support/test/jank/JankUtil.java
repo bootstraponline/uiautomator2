@@ -19,6 +19,7 @@ package android.support.test.jank;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Instrumentation;
 import android.app.UiAutomation;
+import android.util.Log;
 import android.view.accessibility.AccessibilityWindowInfo;
 import android.view.FrameStats;
 
@@ -27,6 +28,8 @@ import java.util.Map;
 
 /** The {@link JankUtil} class provides functionality for monitoring jank. */
 public class JankUtil {
+
+    private static final String TAG = JankUtil.class.getSimpleName();
 
     // Singleton instance
     private static JankUtil sInstance;
@@ -57,8 +60,9 @@ public class JankUtil {
         if (mMonitor != null) {
             throw new IllegalStateException("Monitor already started");
         }
+
         if (type == JankType.CONTENT_FRAMES) {
-            mMonitor = new WindowContentJankMonitor(getCurrentWindow());
+            mMonitor = new WindowContentJankMonitor();
         } else if (type == JankType.ANIMATION_FRAMES) {
             mMonitor = new WindowAnimationJankMonitor();
         } else {
@@ -93,20 +97,23 @@ public class JankUtil {
 
     /** Monitor for detecting window content frame jank. */
     private class WindowContentJankMonitor implements JankMonitor {
-        private int mWindowId;
-
-        public WindowContentJankMonitor(int windowId) {
-            mWindowId = windowId;
-        }
+        private int mWindowId = -1;
 
         @Override
         public void clear() {
+            mWindowId = getCurrentWindow();
             mUiAutomation.clearWindowContentFrameStats(mWindowId);
         }
 
         @Override
         public FrameStats getStats() {
-            return mUiAutomation.getWindowContentFrameStats(mWindowId);
+            int currentWindow = getCurrentWindow();
+            if (currentWindow != mWindowId) {
+                Log.w(TAG, "Current window changed during the test. Did you mean to measure " +
+                        "ANIMATION_FRAMES?");
+            }
+            mWindowId = -1;
+            return mUiAutomation.getWindowContentFrameStats(currentWindow);
         }
     }
 
