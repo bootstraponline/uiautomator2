@@ -33,7 +33,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,8 +145,8 @@ public class UiDevice implements Searchable {
     }
 
     /** Returns all objects that match the {@code selector} criteria. */
-    public Collection<UiObject2> findObjects(BySelector selector) {
-        Collection<UiObject2> ret = new ArrayList<UiObject2>();
+    public List<UiObject2> findObjects(BySelector selector) {
+        List<UiObject2> ret = new ArrayList<UiObject2>();
 
         QueryController qc = getAutomatorBridge().getQueryController();
         for (AccessibilityNodeInfo node : ByMatcher.findMatches(qc.getRootNode(), selector)) {

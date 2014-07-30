@@ -145,7 +145,7 @@ package android.support.test.uiautomator {
     method public void dumpWindowHierarchy(java.lang.String);
     method public android.support.test.uiautomator.UiObject findObject(android.support.test.uiautomator.UiSelector);
     method public android.support.test.uiautomator.UiObject2 findObject(android.support.test.uiautomator.BySelector);
-    method public java.util.Collection<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
+    method public java.util.List<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
     method public void freezeRotation() throws android.os.RemoteException;
     method public deprecated java.lang.String getCurrentActivityName();
     method public java.lang.String getCurrentPackageName();
@@ -260,12 +260,12 @@ package android.support.test.uiautomator {
     method public void drag(android.graphics.Point);
     method public void drag(android.graphics.Point, int);
     method public android.support.test.uiautomator.UiObject2 findObject(android.support.test.uiautomator.BySelector);
-    method public java.util.Collection<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
+    method public java.util.List<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
     method public boolean fling(android.support.test.uiautomator.Direction);
     method public boolean fling(android.support.test.uiautomator.Direction, int);
     method public java.lang.String getApplicationPackage();
     method public int getChildCount();
-    method public java.util.Collection<android.support.test.uiautomator.UiObject2> getChildren();
+    method public java.util.List<android.support.test.uiautomator.UiObject2> getChildren();
     method public java.lang.String getClassName();
     method public java.lang.String getContentDescription();
     method public java.lang.String getResourceName();
@@ -388,7 +388,7 @@ package android.support.test.uiautomator {
     method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> descStartsWith(java.lang.String);
     method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> enabled(boolean);
     method public static android.support.test.uiautomator.SearchCondition<android.support.test.uiautomator.UiObject2> findObject(android.support.test.uiautomator.BySelector);
-    method public static android.support.test.uiautomator.SearchCondition<java.util.Collection<android.support.test.uiautomator.UiObject2>> findObjects(android.support.test.uiautomator.BySelector);
+    method public static android.support.test.uiautomator.SearchCondition<java.util.List<android.support.test.uiautomator.UiObject2>> findObjects(android.support.test.uiautomator.BySelector);
     method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> focusable(boolean);
     method public static android.support.test.uiautomator.UiObject2Condition<java.lang.Boolean> focused(boolean);
     method public static android.support.test.uiautomator.SearchCondition<java.lang.Boolean> gone(android.support.test.uiautomator.BySelector);

@@ -29,7 +29,7 @@ import android.view.MotionEvent.PointerProperties;
 import android.view.ViewConfiguration;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -135,7 +135,7 @@ public class UiObject2 implements Searchable {
     }
 
     /** Returns a collection of the child elements directly under this object. */
-    public Collection<UiObject2> getChildren() {
+    public List<UiObject2> getChildren() {
         return findObjects(By.depth(1));
     }
 
@@ -158,8 +158,8 @@ public class UiObject2 implements Searchable {
     }
 
     /** Searches all elements under this object and returns all objects that match the criteria. */
-    public Collection<UiObject2> findObjects(BySelector selector) {
-        Collection<UiObject2> ret = new ArrayList<UiObject2>();
+    public List<UiObject2> findObjects(BySelector selector) {
+        List<UiObject2> ret = new ArrayList<UiObject2>();
         for (AccessibilityNodeInfo node :
                 ByMatcher.findMatches(getAccessibilityNodeInfo(), selector)) {
 

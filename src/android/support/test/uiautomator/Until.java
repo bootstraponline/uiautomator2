@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -74,11 +74,11 @@ public class Until {
      * Returns a {@link SearchCondition} that is satisfied when at least one element matching the
      * selector can be found. The condition will return all matching elements.
      */
-    public static SearchCondition<Collection<UiObject2>> findObjects(final BySelector selector) {
-        return new SearchCondition<Collection<UiObject2>>() {
+    public static SearchCondition<List<UiObject2>> findObjects(final BySelector selector) {
+        return new SearchCondition<List<UiObject2>>() {
             @Override
-            Collection<UiObject2> apply(Searchable container) {
-                Collection<UiObject2> ret = container.findObjects(selector);
+            List<UiObject2> apply(Searchable container) {
+                List<UiObject2> ret = container.findObjects(selector);
                 return ret.isEmpty() ? null : ret;
             }
         };

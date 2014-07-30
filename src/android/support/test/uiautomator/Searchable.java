@@ -16,7 +16,7 @@
 
 package android.support.test.uiautomator;
 
-import java.util.Collection;
+import java.util.List;
 
 /** The Searchable interface represents an object that can be searched for matching UI elements. */
 interface Searchable {
@@ -28,5 +28,5 @@ interface Searchable {
     public UiObject2 findObject(BySelector selector);
 
     /** Returns all objects that match the {@code selector} criteria. */
-    public Collection<UiObject2> findObjects(BySelector selector);
+    public List<UiObject2> findObjects(BySelector selector);
 }
