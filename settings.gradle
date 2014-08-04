@@ -1,5 +1,5 @@
-include(':uiautomator')
-project(':uiautomator').projectDir = new File(rootDir, 'frameworks/uiautomator')
+include(':uiautomator-v18')
+project(':uiautomator-v18').projectDir = new File(rootDir, 'frameworks/uiautomator')
 
 
 // External
