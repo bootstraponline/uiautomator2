@@ -18,6 +18,7 @@ package android.support.test.uiautomator;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -516,27 +517,36 @@ public class UiObject2 implements Searchable {
             text = "";
         }
 
-        // TODO: On newer platforms, use ACTION_SET_TEXT
-        CharSequence currentText = node.getText();
-        if (!currentText.equals(text)) {
-            // Give focus to the object. This is expected to fail if the object already has focus.
-            if (!node.performAction(AccessibilityNodeInfo.ACTION_FOCUS) && !node.isFocused()) {
-                // TODO: Decide if we should throw here
-                Log.w(TAG, "AccessibilityNodeInfo#performAction(ACTION_FOCUS) failed");
-            }
-            // Select the existing text. This is expected to fail if there is no existing text.
+        if (UiDevice.API_LEVEL_ACTUAL > Build.VERSION_CODES.KITKAT) {
+            // do this for API Level above 19 (exclusive)
             Bundle args = new Bundle();
-            args.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0);
-            args.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, text.length());
-            if (!node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, args) &&
-                    currentText.length() > 0) {
+            args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
+            if (!node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)) {
                 // TODO: Decide if we should throw here
-                Log.w(TAG, "AccessibilityNodeInfo#performAction(ACTION_SET_SELECTION) failed");
+                Log.w(TAG, "AccessibilityNodeInfo#performAction(ACTION_SET_TEXT) failed");
             }
-            // Send the delete key to clear the existing text, then send the new text
-            InteractionController ic = mDevice.getAutomatorBridge().getInteractionController();
-            ic.sendKey(KeyEvent.KEYCODE_DEL, 0);
-            ic.sendText(text);
+        } else {
+            CharSequence currentText = node.getText();
+            if (!currentText.equals(text)) {
+                // Give focus to the object. This is expected to fail if the object already has focus.
+                if (!node.performAction(AccessibilityNodeInfo.ACTION_FOCUS) && !node.isFocused()) {
+                    // TODO: Decide if we should throw here
+                    Log.w(TAG, "AccessibilityNodeInfo#performAction(ACTION_FOCUS) failed");
+                }
+                // Select the existing text. This is expected to fail if there is no existing text.
+                Bundle args = new Bundle();
+                args.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0);
+                args.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, text.length());
+                if (!node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, args) &&
+                        currentText.length() > 0) {
+                    // TODO: Decide if we should throw here
+                    Log.w(TAG, "AccessibilityNodeInfo#performAction(ACTION_SET_SELECTION) failed");
+                }
+                // Send the delete key to clear the existing text, then send the new text
+                InteractionController ic = mDevice.getAutomatorBridge().getInteractionController();
+                ic.sendKey(KeyEvent.KEYCODE_DEL, 0);
+                ic.sendText(text);
+            }
         }
     }
 
