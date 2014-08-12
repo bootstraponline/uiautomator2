@@ -123,7 +123,9 @@ public class JankTestBase extends InstrumentationTestCase {
             JankResult result = jank.stopMonitor();
 
             // Fail the test if we didn't get enough frames
-            assertTrue(result.numFrames > annotation.expectedFrames());
+            assertTrue(String.format("Too few frames received. Expected: %d, Received: %d.",
+                    annotation.expectedFrames(), result.numFrames),
+                    result.numFrames > annotation.expectedFrames());
 
             // Update stats
             sumJankyFrames += result.numJanky;
