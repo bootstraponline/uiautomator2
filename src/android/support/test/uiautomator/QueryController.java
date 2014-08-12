@@ -138,11 +138,6 @@ class QueryController {
         return findAccessibilityNodeInfo(selector, false);
     }
 
-    AccessibilityNodeInfo findAccessibilityNodeInfo(BySelector selector) {
-        mUiAutomatorBridge.waitForIdle();
-        return ByMatcher.findMatch(getRootNode(), selector);
-    }
-
     protected AccessibilityNodeInfo findAccessibilityNodeInfo(UiSelector selector,
             boolean isCounting) {
         mUiAutomatorBridge.waitForIdle();
