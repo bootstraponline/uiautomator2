@@ -129,7 +129,7 @@ public class UiDevice implements Searchable {
     /** Returns whether there is a match for the given {@code selector} criteria. */
     public boolean hasObject(BySelector selector) {
         QueryController qc = getAutomatorBridge().getQueryController();
-        AccessibilityNodeInfo node = ByMatcher.findMatch(qc.getRootNode(), selector);
+        AccessibilityNodeInfo node = ByMatcher.findMatch(this, qc.getRootNode(), selector);
         if (node != null) {
             node.recycle();
             return true;
@@ -140,7 +140,7 @@ public class UiDevice implements Searchable {
     /** Returns the first object to match the {@code selector} criteria. */
     public UiObject2 findObject(BySelector selector) {
         QueryController qc = getAutomatorBridge().getQueryController();
-        AccessibilityNodeInfo node = ByMatcher.findMatch(qc.getRootNode(), selector);
+        AccessibilityNodeInfo node = ByMatcher.findMatch(this, qc.getRootNode(), selector);
         return node != null ? new UiObject2(this, selector, node) : null;
     }
 
@@ -149,7 +149,7 @@ public class UiDevice implements Searchable {
         List<UiObject2> ret = new ArrayList<UiObject2>();
 
         QueryController qc = getAutomatorBridge().getQueryController();
-        for (AccessibilityNodeInfo node : ByMatcher.findMatches(qc.getRootNode(), selector)) {
+        for (AccessibilityNodeInfo node : ByMatcher.findMatches(this, qc.getRootNode(), selector)) {
             ret.add(new UiObject2(this, selector, node));
         }
 

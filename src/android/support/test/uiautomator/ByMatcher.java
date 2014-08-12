@@ -34,6 +34,7 @@ class ByMatcher {
 
     private static final String TAG = ByMatcher.class.getSimpleName();
 
+    private UiDevice mDevice;
     private BySelector mSelector;
     private boolean mShortCircuit;
 
@@ -45,7 +46,8 @@ class ByMatcher {
      * @param selector The criteria used to determine if a {@link AccessibilityNodeInfo} is a match.
      * @param shortCircuit If true, this method will return early when the first match is found.
      */
-    private ByMatcher(BySelector selector, boolean shortCircuit) {
+    private ByMatcher(UiDevice device, BySelector selector, boolean shortCircuit) {
+        mDevice = device;
         mSelector = selector;
         mShortCircuit = shortCircuit;
     }
@@ -60,9 +62,12 @@ class ByMatcher {
      * @param selector The {@link BySelector} criteria used to determine if a node is a match.
      * @return The first {@link AccessibilityNodeInfo} which matched the search criteria.
      */
-    static AccessibilityNodeInfo findMatch(AccessibilityNodeInfo root, BySelector selector) {
+    static AccessibilityNodeInfo findMatch(UiDevice device, AccessibilityNodeInfo root,
+            BySelector selector) {
+
         // TODO: Don't short-circuit when debugging, and warn if more than one match.
-        List<AccessibilityNodeInfo> matches = new ByMatcher(selector, true).findMatches(root);
+        ByMatcher matcher = new ByMatcher(device, selector, true);
+        List<AccessibilityNodeInfo> matches = matcher.findMatches(root);
         return matches.isEmpty() ? null : matches.get(0);
     }
 
@@ -76,9 +81,9 @@ class ByMatcher {
      * @param selector The {@link BySelector} criteria used to determine if a node is a match.
      * @return A list containing all of the nodes which matched the search criteria.
      */
-    static List<AccessibilityNodeInfo> findMatches(AccessibilityNodeInfo root,
+    static List<AccessibilityNodeInfo> findMatches(UiDevice device, AccessibilityNodeInfo root,
             BySelector selector) {
-        return new ByMatcher(selector, false).findMatches(root);
+        return new ByMatcher(device, selector, false).findMatches(root);
     }
 
     /**
@@ -91,7 +96,17 @@ class ByMatcher {
      * @return A list containing all of the nodes which matched the search criteria.
      */
     private List<AccessibilityNodeInfo> findMatches(AccessibilityNodeInfo root) {
-        return findMatches(root, 0, 0, new SinglyLinkedList<PartialMatch>());
+        List<AccessibilityNodeInfo> ret =
+                findMatches(root, 0, 0, new SinglyLinkedList<PartialMatch>());
+
+        // If no matches were found
+        if (ret.isEmpty()) {
+            // Run watchers and retry
+            mDevice.runWatchers();
+            ret = findMatches(root, 0, 0, new SinglyLinkedList<PartialMatch>());
+        }
+
+        return ret;
     }
 
     /**
