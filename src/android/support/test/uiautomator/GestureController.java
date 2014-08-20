@@ -195,9 +195,6 @@ class GestureController {
                         properties, coordinates);
                 mDevice.getAutomatorBridge().injectInputEvent(event, true);
             }
-
-            // Artificial delay before injecting more events
-            SystemClock.sleep(MOTION_EVENT_INJECTION_DELAY_MILLIS);
         }
     }
 
