@@ -21,6 +21,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.KeyEvent;
@@ -48,6 +49,7 @@ public class UiObject2 implements Searchable {
     private GestureController mGestureController;
     private BySelector mSelector;  // Hold this mainly for debugging
     private AccessibilityNodeInfo mCachedNode;
+    private DisplayMetrics mDisplayMetrics;
 
     // Margins
     private int mMarginLeft   = 5;
@@ -55,12 +57,12 @@ public class UiObject2 implements Searchable {
     private int mMarginRight  = 5;
     private int mMarginBottom = 5;
 
-    /** TODO: Move these some place more appropriate / allow them to be configured? */
-    private final int DEFAULT_SWIPE_SPEED  = 5000;
-    private final int DEFAULT_SCROLL_SPEED = 5000;
-    private final int DEFAULT_FLING_SPEED  = 1000;
-    private final int DEFAULT_DRAG_SPEED = 1000;
-    private final int DEFAULT_PINCH_SPEED = 1000;
+    // Default gesture speeds
+    private static final int DEFAULT_SWIPE_SPEED  = 5000;
+    private static final int DEFAULT_SCROLL_SPEED = 5000;
+    private static final int DEFAULT_FLING_SPEED = 7500;
+    private static final int DEFAULT_DRAG_SPEED = 2500;
+    private static final int DEFAULT_PINCH_SPEED = 2500;
     // Short, since we should stop scrolling after the gesture completes.
     private final long SCROLL_TIMEOUT = 1000;
     // Longer, since we may continue to scroll after the gesture completes.
@@ -77,6 +79,8 @@ public class UiObject2 implements Searchable {
         mCachedNode = cachedNode;
         mGestures = Gestures.getInstance(device);
         mGestureController = GestureController.getInstance(device);
+        mDisplayMetrics = mDevice.getAutomatorBridge().getContext().getResources()
+                .getDisplayMetrics();
     }
 
     /** Recycle this object. */
@@ -325,7 +329,7 @@ public class UiObject2 implements Searchable {
      * @param dest The end point that this object should be dragged to.
      */
     public void drag(Point dest) {
-        drag(dest, DEFAULT_DRAG_SPEED);
+        drag(dest, (int)(DEFAULT_DRAG_SPEED * mDisplayMetrics.density));
     }
 
     /**
@@ -352,7 +356,7 @@ public class UiObject2 implements Searchable {
      * @param percent The size of the pinch as a percentage of this object's size.
      */
     public void pinchClose(float percent) {
-        pinchClose(percent, DEFAULT_PINCH_SPEED);
+        pinchClose(percent, (int)(DEFAULT_PINCH_SPEED * mDisplayMetrics.density));
     }
 
     /**
@@ -377,7 +381,7 @@ public class UiObject2 implements Searchable {
      * @param percent The size of the pinch as a percentage of this object's size.
      */
     public void pinchOpen(float percent) {
-        pinchOpen(percent, DEFAULT_PINCH_SPEED);
+        pinchOpen(percent, (int)(DEFAULT_PINCH_SPEED * mDisplayMetrics.density));
     }
 
     /**
@@ -403,7 +407,7 @@ public class UiObject2 implements Searchable {
      * @param percent The length of the swipe as a percentage of this object's size.
      */
     public void swipe(Direction direction, float percent) {
-        swipe(direction, percent, DEFAULT_SWIPE_SPEED);
+        swipe(direction, percent, (int)(DEFAULT_SWIPE_SPEED * mDisplayMetrics.density));
     }
 
     /**
@@ -432,7 +436,7 @@ public class UiObject2 implements Searchable {
      * @return Whether the object can still scroll in the given direction.
      */
     public boolean scroll(final Direction direction, final float percent) {
-        return scroll(direction, percent, DEFAULT_SCROLL_SPEED);
+        return scroll(direction, percent, (int)(DEFAULT_SCROLL_SPEED * mDisplayMetrics.density));
     }
 
     /**
@@ -479,7 +483,7 @@ public class UiObject2 implements Searchable {
      * @return Whether the object can still scroll in the given direction.
      */
     public boolean fling(final Direction direction) {
-        return fling(direction, DEFAULT_FLING_SPEED);
+        return fling(direction, (int)(DEFAULT_FLING_SPEED * mDisplayMetrics.density));
     }
 
     /**
