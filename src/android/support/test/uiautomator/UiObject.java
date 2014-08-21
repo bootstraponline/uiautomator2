@@ -599,6 +599,15 @@ public class UiObject {
     }
 
     /**
+     * Set the text content by sending individual key codes.
+     * @hide
+     */
+    public boolean legacySetText(String text) throws UiObjectNotFoundException {
+        clearTextField();
+        return getInteractionController().sendText(text);
+    }
+
+    /**
      * Sets the text in an editable field, after clearing the field's content.
      *
      * <p>
@@ -638,8 +647,7 @@ public class UiObject {
             args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
             return node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args);
         } else {
-            clearTextField();
-            return getInteractionController().sendText(text);
+            return legacySetText(text);
         }
     }
 
