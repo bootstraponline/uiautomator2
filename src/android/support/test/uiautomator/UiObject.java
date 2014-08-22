@@ -602,9 +602,27 @@ public class UiObject {
      * Set the text content by sending individual key codes.
      * @hide
      */
-    public boolean legacySetText(String text) throws UiObjectNotFoundException {
-        clearTextField();
-        return getInteractionController().sendText(text);
+    public void legacySetText(String text) throws UiObjectNotFoundException {
+        Tracer.trace();
+        // long click left + center
+        AccessibilityNodeInfo node = findAccessibilityNodeInfo(mConfig.getWaitForSelectorTimeout());
+        if (node == null) {
+            throw new UiObjectNotFoundException(getSelector().toString());
+        }
+        Rect rect = getVisibleBounds(node);
+        getInteractionController().longTapNoSync(rect.left + 20, rect.centerY());
+        // check if the edit menu is open
+        UiObject selectAll = new UiObject(new UiSelector().descriptionContains("Select all"));
+        if (selectAll.waitForExists(50)) {
+            selectAll.click();
+        }
+        // wait for the selection
+        SystemClock.sleep(250);
+        // delete it
+        getInteractionController().sendKey(KeyEvent.KEYCODE_DEL, 0);
+
+        // Send new text
+        getInteractionController().sendText(text);
     }
 
     /**
@@ -647,7 +665,8 @@ public class UiObject {
             args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text);
             return node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args);
         } else {
-            return legacySetText(text);
+            clearTextField();
+            return getInteractionController().sendText(text);
         }
     }
 
