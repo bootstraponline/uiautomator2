@@ -163,9 +163,8 @@ public class UiDevice implements Searchable {
      * @param condition The {@link SearchCondition} to evaluate.
      * @param timeout Maximum amount of time to wait in milliseconds.
      * @return The final result returned by the condition.
-     * @throws TimeoutException If the timeout expires.
      */
-    public <R> R wait(SearchCondition<R> condition, long timeout) throws TimeoutException {
+    public <R> R wait(SearchCondition<R> condition, long timeout) {
         return mWaitMixin.wait(condition, timeout);
     }
 
@@ -176,25 +175,21 @@ public class UiDevice implements Searchable {
      * @param condition The {@link EventCondition} to evaluate.
      * @param timeout Maximum amount of time to wait in milliseconds.
      * @return The final result returned by the condition.
-     * @throws TimeoutException If the timeout expires.
      */
-    public <R> R performActionAndWait(Runnable action, EventCondition<R> condition, long timeout)
-            throws TimeoutException {
+    public <R> R performActionAndWait(Runnable action, EventCondition<R> condition, long timeout) {
 
         AccessibilityEvent event = null;
         try {
             event = getAutomatorBridge().executeCommandAndWaitForAccessibilityEvent(
                 action, new EventForwardingFilter(condition), timeout);
-        } catch (TimeoutException e) { }
+        } catch (TimeoutException e) {
+            // Ignore
+        }
 
         if (event != null) {
             event.recycle();
         }
 
-        R result = condition.getResult();
-        if (result == null || result.equals(false)) {
-            throw new TimeoutException();
-        }
         return condition.getResult();
     }
 
