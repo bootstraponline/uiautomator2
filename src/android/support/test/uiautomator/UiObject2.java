@@ -134,6 +134,12 @@ public class UiObject2 implements Searchable {
 
     // Search functions
 
+    /** Returns this object's parent. */
+    public UiObject2 getParent() {
+        AccessibilityNodeInfo parent = getAccessibilityNodeInfo().getParent();
+        return parent != null ? new UiObject2(mDevice, mSelector, parent) : null;
+    }
+
     /** Returns the number of child elements directly under this object. */
     public int getChildCount() {
         return getAccessibilityNodeInfo().getChildCount();
