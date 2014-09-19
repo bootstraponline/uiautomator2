@@ -16,15 +16,12 @@
 
 package android.support.test.uiautomator;
 
-import android.app.UiAutomation.AccessibilityEventFilter;
 import android.graphics.Point;
 import android.os.SystemClock;
-import android.view.accessibility.AccessibilityEvent;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.MotionEvent.PointerCoords;
 import android.view.MotionEvent.PointerProperties;
-import android.view.ViewConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.TimeoutException;
 
 /**
  * The {@link GestureController} provides methods for performing high-level {@link PointerGesture}s.
@@ -88,12 +84,12 @@ class GestureController {
      * @param condition The {@link EventCondition} to wait for.
      * @param timeout Maximum amount of time to wait in milliseconds.
      * @param gestures One or more {@link PointerGesture}s which define the gesture to be performed.
-     * @throws TimeoutException If the timeout expires.
+     * @return The final result returned by the condition.
      */
-    public void performGestureAndWait(EventCondition condition, long timeout,
-            PointerGesture ... gestures) throws TimeoutException {
+    public <R> R performGestureAndWait(EventCondition<R> condition, long timeout,
+            PointerGesture ... gestures) {
 
-        mDevice.performActionAndWait(new GestureRunnable(gestures), condition, timeout);
+        return mDevice.performActionAndWait(new GestureRunnable(gestures), condition, timeout);
     }
 
     /**

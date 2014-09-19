@@ -32,7 +32,6 @@ import android.view.ViewConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 /**
  * A {@link UiObject2} represents a UI element. Unlike {@link UiObject}, it is bound to a particular
@@ -114,9 +113,8 @@ public class UiObject2 implements Searchable {
      * @param condition The {@link UiObject2Condition} to evaluate.
      * @param timeout Maximum amount of time to wait in milliseconds.
      * @return The final result returned by the condition.
-     * @throws TimeoutException If the timeout expires.
      */
-    public <R> R wait(UiObject2Condition<R> condition, long timeout) throws TimeoutException {
+    public <R> R wait(UiObject2Condition<R> condition, long timeout) {
         return mWaitMixin.wait(condition, timeout);
     }
 
@@ -126,9 +124,8 @@ public class UiObject2 implements Searchable {
      * @param condition The {@link SearchCondition} to evaluate.
      * @param timeout Maximum amount of time to wait in milliseconds.
      * @return The final result returned by the condition.
-     * @throws TimeoutException If the timeout expires.
      */
-    public <R> R wait(SearchCondition<R> condition, long timeout) throws TimeoutException {
+    public <R> R wait(SearchCondition<R> condition, long timeout) {
         return mWaitMixin.wait(condition, timeout);
     }
 
@@ -324,8 +321,8 @@ public class UiObject2 implements Searchable {
     }
 
     /** Clicks on this object, and waits for the given condition to become true. */
-    public void clickAndWait(EventCondition condition, long timeout) throws TimeoutException {
-        mGestureController.performGestureAndWait(condition, timeout,
+    public <R> R clickAndWait(EventCondition<R> condition, long timeout) {
+        return mGestureController.performGestureAndWait(condition, timeout,
                 mGestures.click(getVisibleCenter()));
     }
 
@@ -378,7 +375,8 @@ public class UiObject2 implements Searchable {
         if (speed < 0) {
             throw new IllegalArgumentException("Speed cannot be negative");
         }
-        mGestureController.performGesture(mGestures.pinchClose(getVisibleBoundsForGestures(), percent, speed));
+        mGestureController.performGesture(
+                mGestures.pinchClose(getVisibleBoundsForGestures(), percent, speed));
     }
 
     /**
@@ -403,7 +401,8 @@ public class UiObject2 implements Searchable {
         if (speed < 0) {
             throw new IllegalArgumentException("Speed cannot be negative");
         }
-        mGestureController.performGesture(mGestures.pinchOpen(getVisibleBoundsForGestures(), percent, speed));
+        mGestureController.performGesture(
+                mGestures.pinchOpen(getVisibleBoundsForGestures(), percent, speed));
     }
 
     /**
@@ -468,17 +467,16 @@ public class UiObject2 implements Searchable {
         Rect bounds = getVisibleBoundsForGestures();
         for (; percent > 0.0f; percent -= 1.0f) {
             float segment = percent > 1.0f ? 1.0f : percent;
-            PointerGesture swipe = mGestures.swipeRect(bounds, swipeDirection, segment, speed).pause(250);
-            try {
-                mGestureController.performGestureAndWait(Until.scrollFinished(direction), SCROLL_TIMEOUT, swipe);
-            } catch (TimeoutException e) {
-                // A timeout means the scroll did not reach the end. Continue looping.
-                continue;
+            PointerGesture swipe =
+                    mGestures.swipeRect(bounds, swipeDirection, segment, speed).pause(250);
+
+            // Perform the gesture and return early if we reached the end
+            if (mGestureController.performGestureAndWait(
+                    Until.scrollFinished(direction), SCROLL_TIMEOUT, swipe)) {
+                return false;
             }
-            // The scroll reached the end. Return early.
-            return false;
         }
-        // We never reached the end.
+        // We never reached the end
         return true;
     }
 
@@ -510,21 +508,17 @@ public class UiObject2 implements Searchable {
 
         Rect bounds = getVisibleBoundsForGestures();
         PointerGesture swipe = mGestures.swipeRect(bounds, swipeDirection, 1.0f, speed);
-        try {
-            mGestureController.performGestureAndWait(Until.scrollFinished(direction), FLING_TIMEOUT, swipe);
-        } catch (TimeoutException e) {
-            // A timeout means the scroll did not reach the end
-            return true;
-        }
-        // We never reached the end
-        return false;
+
+        // Perform the gesture and return true if we did not reach the end
+        return !mGestureController.performGestureAndWait(
+                Until.scrollFinished(direction), FLING_TIMEOUT, swipe);
     }
 
     /**
      * Set the text content by sending individual key codes.
      * @hide
      */
-    public void legacySetText(String text) throws TimeoutException {
+    public void legacySetText(String text) {
         AccessibilityNodeInfo node = getAccessibilityNodeInfo();
 
         CharSequence currentText = node.getText();
@@ -567,12 +561,12 @@ public class UiObject2 implements Searchable {
         } else {
             CharSequence currentText = node.getText();
             if (!currentText.equals(text)) {
-                // Give focus to the object. This is expected to fail if the object already has focus.
+                // Give focus to the object. Expect this to fail if the object already has focus.
                 if (!node.performAction(AccessibilityNodeInfo.ACTION_FOCUS) && !node.isFocused()) {
                     // TODO: Decide if we should throw here
                     Log.w(TAG, "AccessibilityNodeInfo#performAction(ACTION_FOCUS) failed");
                 }
-                // Select the existing text. This is expected to fail if there is no existing text.
+                // Select the existing text. Expect this to fail if there is no existing text.
                 Bundle args = new Bundle();
                 args.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0);
                 args.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, text.length());

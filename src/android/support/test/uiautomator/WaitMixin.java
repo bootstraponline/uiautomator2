@@ -18,8 +18,6 @@ package android.support.test.uiautomator;
 
 import android.os.SystemClock;
 
-import java.util.concurrent.TimeoutException;
-
 /**
  * Mixin which provides functionality to wait for conditions that depend on a given object.
  */
@@ -32,13 +30,11 @@ class WaitMixin<T> {
         mObject = instance;
     }
 
-    public <R> R wait(Condition<? super T, R> condition, long timeout) throws TimeoutException {
+    public <R> R wait(Condition<? super T, R> condition, long timeout) {
         return wait(condition, timeout, DEFAULT_POLL_INTERVAL);
     }
 
-    public <R> R wait(Condition<? super T, R> condition, long timeout, long interval)
-            throws TimeoutException {
-
+    public <R> R wait(Condition<? super T, R> condition, long timeout, long interval) {
         long startTime = SystemClock.uptimeMillis();
 
         R result = condition.apply(mObject);
@@ -46,7 +42,7 @@ class WaitMixin<T> {
                 elapsedTime = SystemClock.uptimeMillis() - startTime) {
 
             if (elapsedTime >= timeout) {
-                throw new TimeoutException();
+                break;
             }
 
             SystemClock.sleep(interval);

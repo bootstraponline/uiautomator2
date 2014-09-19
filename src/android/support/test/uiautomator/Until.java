@@ -244,8 +244,8 @@ public class Until {
     }
 
     /**
-     * Returns a condition that is satisfied when the object's content description contains the given
-     * string.
+     * Returns a condition that is satisfied when the object's content description contains the
+     * given string.
      */
     public static UiObject2Condition<Boolean> descContains(String substring) {
         return descMatches(Pattern.compile(String.format("^.*%s.*$", Pattern.quote(substring))));
