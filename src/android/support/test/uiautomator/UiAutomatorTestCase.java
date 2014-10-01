@@ -23,7 +23,11 @@ import android.test.InstrumentationTestCase;
 
 /**
  * UI Automator test case that is executed on the device.
+ * @deprecated It is no longer necessary to extend UiAutomatorTestCase. You can use
+ * {@link UiDevice#getInstance(Instrumentation)} from any test class as long as you have access to
+ * an {@link Instrumentation} instance.
  */
+@Deprecated
 public class UiAutomatorTestCase extends InstrumentationTestCase {
 
     private Bundle mParams;
@@ -35,7 +39,7 @@ public class UiAutomatorTestCase extends InstrumentationTestCase {
      * @since API Level 16
      */
     public UiDevice getUiDevice() {
-        return UiDevice.getInstance();
+        return UiDevice.getInstance(getInstrumentation());
     }
 
     /**
@@ -91,7 +95,9 @@ public class UiAutomatorTestCase extends InstrumentationTestCase {
      * Calls {@link SystemClock#sleep(long)} to sleep
      * @param ms is in milliseconds.
      * @since API Level 16
+     * @deprecated Use {@link SystemClock#sleep(long)} instead.
      */
+    @Deprecated
     public void sleep(long ms) {
         SystemClock.sleep(ms);
     }
