@@ -82,6 +82,32 @@ public class UiObject2 implements Searchable {
                 .getDisplayMetrics();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null) {
+            return false;
+        }
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+        try {
+            UiObject2 other = (UiObject2)object;
+            return getAccessibilityNodeInfo().equals(other.getAccessibilityNodeInfo());
+        } catch (StaleObjectException e) {
+            return false;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        return getAccessibilityNodeInfo().hashCode();
+    }
+
     /** Recycle this object. */
     public void recycle() {
         mCachedNode.recycle();
