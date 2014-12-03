@@ -13,8 +13,8 @@ ext {
 
 // Android Library configuration
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.0.0"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.0"
 
     sourceSets {
         main.manifest.srcFile 'AndroidManifest.xml'
