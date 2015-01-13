@@ -2,7 +2,7 @@ apply plugin: 'android-library'
 apply plugin: 'maven'
 apply plugin: 'dist'
 
-group = 'com.android.support.test'
+group = 'com.android.support.test.uiautomator'
 version = '2.0.0'
 
 ext {
