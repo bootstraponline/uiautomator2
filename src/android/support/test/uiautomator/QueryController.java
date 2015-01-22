@@ -163,17 +163,18 @@ class QueryController {
      * @return null if no root node is obtained
      */
     AccessibilityNodeInfo getRootNode() {
-        final int maxRetry = 4;
-        final long waitInterval = 250;
+        final int maxRetry = 6;
+        long waitInterval = 250;
         AccessibilityNodeInfo rootNode = null;
-        for(int x = 0; x < maxRetry; x++) {
+        for (int x = 0; x < maxRetry; x++) {
             rootNode = mUiAutomatorBridge.getRootInActiveWindow();
             if (rootNode != null) {
                 return rootNode;
             }
-            if(x < maxRetry - 1) {
+            if (x < maxRetry - 1) {
                 Log.e(LOG_TAG, "Got null root node from accessibility - Retrying...");
                 SystemClock.sleep(waitInterval);
+                waitInterval *= 2;
             }
         }
         return rootNode;
