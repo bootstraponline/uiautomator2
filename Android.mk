@@ -25,7 +25,7 @@ uiautomator_internal_removed_api_file := \
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
-LOCAL_MODULE := ub-uiautomator
+LOCAL_MODULE := ub-uiautomator-src
 LOCAL_SDK_VERSION := current
 LOCAL_JAVACFLAGS := -source 6 -target 6
 

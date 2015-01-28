@@ -18,17 +18,12 @@ package android.support.test.jank;
 
 import android.app.Activity;
 import android.app.Instrumentation;
-import android.app.UiAutomation;
 import android.os.Bundle;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnitRunner;
 import android.test.InstrumentationTestCase;
 import android.test.InstrumentationTestRunner;
-import android.util.Log;
-import android.view.FrameStats;
-import android.view.WindowAnimationFrameStats;
-import android.view.WindowContentFrameStats;
-import android.view.accessibility.AccessibilityWindowInfo;
 
-import java.lang.Math;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -172,9 +167,12 @@ public class JankTestBase extends InstrumentationTestCase {
     protected final Bundle getArguments() {
         if (arguments == null) {
             Instrumentation instrumentation = getInstrumentation();
-            // This hack only works for InstrumentationTestRunner subclasses
+            // Attempt to obtain the command line arguments bundle, but this is only supported by
+            // InstrumentationTestRunner or AndroidJUnitRunner
             if (instrumentation instanceof InstrumentationTestRunner) {
-                arguments = ((InstrumentationTestRunner)instrumentation).getArguments();
+                arguments = ((InstrumentationTestRunner) instrumentation).getArguments();
+            } else if (instrumentation instanceof AndroidJUnitRunner) {
+                arguments = InstrumentationRegistry.getArguments();
             } else {
                 throw new RuntimeException("Unsupported test runner");
             }
