@@ -32,15 +32,32 @@ public @interface JankTest {
     /** The minimum number of frames expected */
     int expectedFrames();
 
-    /** Alternate method to execute before the test method */
+    /**
+     * Alternate method to execute before the test method
+     * <p>
+     * Note: the annotated method must have same signature as {@link JankTestBase#beforeTest()}
+     */
     String beforeTest() default "beforeTest";
 
-    /** Alternate method to execute before each iteration */
+    /**
+     * Alternate method to execute before each iteration
+     * <p>
+     * Note: the annotated method must have same signature as {@link JankTestBase#beforeLoop()}
+     */
     String beforeLoop() default "beforeLoop";
 
-    /** Alternate method to execute after each iteration */
+    /**
+     * Alternate method to execute after each iteration
+     * <p>
+     * Note: the annotated method must have same signature as {@link JankTestBase#afterLoop()}
+     */
     String afterLoop() default "afterLoop";
 
-    /** Alternate method to execute after all iterations have completed */
+    /**
+     * Alternate method to execute after all iterations have completed.
+     * <p>
+     * <b>Important:</b> the annotated method must take a parameter of type {@link JankMetrics}.
+     * See {@link JankTestBase#afterTest(JankMetrics)}
+     * */
     String afterTest() default "afterTest";
 }

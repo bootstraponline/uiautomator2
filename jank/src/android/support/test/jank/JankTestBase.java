@@ -67,16 +67,25 @@ public class JankTestBase extends InstrumentationTestCase {
         // Default implementation. Do nothing.
     }
 
-    /** Called once after all iterations have completed. */
-    public void afterTest() throws Exception {
-        // Default implementation. Do nothing.
+    /**
+     * Called once after all iterations have completed.
+     * <p>Note: default implementation reports the aggregated jank metrics via
+     * {@link Instrumentation#sendStatus(int, Bundle)}
+     * @param metrics the aggregated jank metrics after looped execution
+     * */
+    public void afterTest(JankMetrics metrics) throws Exception {
+        Bundle status = new Bundle();
+        status.putDouble(KEY_AVG_JANK, metrics.averageJank);
+        status.putInt(KEY_MAX_JANK, metrics.maxJank);
+        status.putDouble(KEY_AVG_FPS, metrics.averageFps);
+        status.putDouble(KEY_AVG_MAX_FRAME_DURATION, metrics.averageMaxFrameDuration);
+        getInstrumentation().sendStatus(Activity.RESULT_OK, status);
     }
 
     /** Return the index of the currently executing iteration. */
     public final int getCurrentIteration() {
         return mCurrentIteration;
     }
-
 
     @Override
     protected final void runTest() throws Throwable {
@@ -87,7 +96,7 @@ public class JankTestBase extends InstrumentationTestCase {
         Method beforeTest = resolveMethod(annotation.beforeTest());
         Method beforeLoop = resolveMethod(annotation.beforeLoop());
         Method afterLoop  = resolveMethod(annotation.afterLoop());
-        Method afterTest  = resolveMethod(annotation.afterTest());
+        Method afterTest  = resolveAfterTest(annotation.afterTest());
 
         // Get a JankUtil instance
         JankUtil jank = JankUtil.getInstance(getInstrumentation());
@@ -132,16 +141,14 @@ public class JankTestBase extends InstrumentationTestCase {
             afterLoop.invoke(this, (Object[])null);
         }
 
-        // Test tear down
-        afterTest.invoke(this, (Object[])null);
-
-        // Report results
-        Bundle status = new Bundle();
-        status.putDouble(KEY_AVG_JANK, (double)sumJankyFrames / iterations);
-        status.putInt(KEY_MAX_JANK, maxJankyFrames);
-        status.putDouble(KEY_AVG_FPS, sumFps / iterations);
-        status.putDouble(KEY_AVG_MAX_FRAME_DURATION, sumLongestFrame / iterations);
-        getInstrumentation().sendStatus(Activity.RESULT_OK, status);
+        // Report aggregated results
+        JankMetrics metrics = new JankMetrics();
+        metrics.averageJank = (double)sumJankyFrames / iterations;
+        metrics.maxJank = maxJankyFrames;
+        metrics.averageFps = sumFps / iterations;
+        metrics.averageMaxFrameDuration = sumLongestFrame / iterations;
+        // Test tear down and reporting
+        afterTest.invoke(this, metrics);
     }
 
 
@@ -154,6 +161,27 @@ public class JankTestBase extends InstrumentationTestCase {
             method = getClass().getMethod(name, (Class[]) null);
         } catch (NoSuchMethodException e) {
             fail(String.format("Method \"%s\" not found", name));
+        }
+
+        if (!Modifier.isPublic(method.getModifiers())) {
+            fail(String.format("Method \"%s\" should be public", name));
+        }
+
+        return method;
+    }
+
+    /**
+     * Returns a {@link Method}} object representing the method annotated with
+     * {@link JankTest#afterTest()}.
+     */
+    private Method resolveAfterTest(String name) {
+        assertNotNull(name);
+
+        Method method = null;
+        try {
+            method = getClass().getMethod(name, JankMetrics.class);
+        } catch (NoSuchMethodException e) {
+            fail("method annotated with JankTest#afterTest has wrong signature");
         }
 
         if (!Modifier.isPublic(method.getModifiers())) {

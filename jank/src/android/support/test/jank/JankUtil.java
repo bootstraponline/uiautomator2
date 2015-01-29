@@ -20,11 +20,8 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Instrumentation;
 import android.app.UiAutomation;
 import android.util.Log;
-import android.view.accessibility.AccessibilityWindowInfo;
 import android.view.FrameStats;
-
-import java.util.HashMap;
-import java.util.Map;
+import android.view.accessibility.AccessibilityWindowInfo;
 
 /** The {@link JankUtil} class provides functionality for monitoring jank. */
 public class JankUtil {
