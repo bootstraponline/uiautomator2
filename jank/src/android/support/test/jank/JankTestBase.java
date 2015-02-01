@@ -46,8 +46,6 @@ public class JankTestBase extends InstrumentationTestCase {
     public static final String KEY_AVG_FPS = "avg-fps";
     public static final String KEY_AVG_MAX_FRAME_DURATION = "avg-max-frame-duration";
 
-    public static final String DEFAULT_ITERATIONS = "20";
-
     private Bundle arguments = null;
     private int mCurrentIteration = 0;
 
@@ -112,7 +110,7 @@ public class JankTestBase extends InstrumentationTestCase {
 
         // Execute the test several times according to the "iteration" parameter
         int iterations = Integer.valueOf(getArguments().getString("iterations",
-                DEFAULT_ITERATIONS));
+                Integer.toString(annotation.defaultIterationCount())));
         for (; mCurrentIteration < iterations; mCurrentIteration++) {
             // Loop setup
             beforeLoop.invoke(this, (Object[])null);

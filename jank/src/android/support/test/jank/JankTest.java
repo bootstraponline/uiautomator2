@@ -32,6 +32,9 @@ public @interface JankTest {
     /** The minimum number of frames expected */
     int expectedFrames();
 
+    /** Default iteration count to run if not specified by command line **/
+    int defaultIterationCount() default 20;
+
     /**
      * Alternate method to execute before the test method
      * <p>
