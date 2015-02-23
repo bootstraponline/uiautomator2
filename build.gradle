@@ -18,7 +18,6 @@ android {
 
     sourceSets {
         main.manifest.srcFile 'AndroidManifest.xml'
-        main.java.srcDirs 'src'
     }
 
     defaultConfig {

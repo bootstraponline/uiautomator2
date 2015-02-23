@@ -24,7 +24,7 @@ uiautomator_internal_removed_api_file := \
 # Build core library
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(call all-java-files-under, src)
+LOCAL_SRC_FILES := $(call all-java-files-under, src/main/java)
 LOCAL_MODULE := ub-uiautomator-src
 LOCAL_SDK_VERSION := current
 LOCAL_JAVACFLAGS := -source 6 -target 6
@@ -48,7 +48,7 @@ uiautomator_library := $(LOCAL_BUILT_MODULE)
 ###############################################
 # Generate the stub source files
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(call all-java-files-under, src)
+LOCAL_SRC_FILES := $(call all-java-files-under, src/main/java)
 LOCAL_SDK_VERSION := current
 LOCAL_MODULE_CLASS := DOCS
 LOCAL_DROIDDOC_HTML_DIR :=
