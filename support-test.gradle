@@ -1,0 +1,65 @@
+apply plugin: 'android-library'
+
+group = 'com.android.support.test.uiautomator'
+version = '2.0.0'
+
+// Android Library configuration
+android {
+    defaultConfig {
+        minSdkVersion 18
+    }
+}
+
+configurations {
+    doclava
+}
+
+dependencies {
+    doclava project(':doclava')
+}
+
+apply from: "../testing/publish.gradle"
+
+// Add Javadoc tasks for all build variants.
+afterEvaluate {
+    // Configure the javadoc task to generate api lists
+    android.libraryVariants.each { variant ->
+        Javadoc javadoc = project.tasks.findByName("generate${variant.name.capitalize()}Javadoc")
+        javadoc.options.addStringOption("api", "${project.docsDir}/${variant.name}/api.txt")
+        javadoc.options.addStringOption("removedApi", "${project.docsDir}/${variant.name}/removed.txt")
+        javadoc.options.addStringOption("stubpackages", "android.support.test.uiautomator")
+    }
+
+    // Setup dependencies for api check
+    apiCheckLast.dependsOn generateReleaseJavadoc
+    apiCheckCurrent.dependsOn generateReleaseJavadoc
+    packageReleaseJavadoc.dependsOn apiCheckLast
+    packageReleaseJavadoc.dependsOn apiCheckCurrent
+}
+
+// Check API against current version
+task apiCheckCurrent(type: JavaExec) {
+    main = "com.google.doclava.apicheck.ApiCheck"
+    classpath = configurations.doclava
+    args("-error", "2", "-error", "3", "-error", "4", "-error", "5", "-error", "6")
+    args("-error", "7", "-error", "8", "-error", "9", "-error", "10", "-error", "11")
+    args("-error", "12", "-error", "13", "-error", "14", "-error", "15", "-error", "16")
+    args("-error", "17", "-error", "18", "-error", "19", "-error", "20", "-error", "21")
+    args("-error", "23", "-error", "24", "-error", "25")
+    args('api/current.txt', "${project.docsDir}/release/api.txt")
+    args("api/removed.txt", "${project.docsDir}/release/removed.txt")
+}
+
+// Check API against previously released version
+task apiCheckLast(type: JavaExec) {
+    main = "com.google.doclava.apicheck.ApiCheck"
+    classpath = configurations.doclava
+    args("-hide", "2", "-hide", "3", "-hide", "4", "-hide", "5", "-hide", "6")
+    args("-error", "7", "-error", "8", "-error", "9", "-error", "10", "-error", "11")
+    args("-error", "12", "-error", "13", "-error", "14", "-error", "15", "-error", "16")
+    args("-error", "17", "-error", "18")
+    args("-hide", "24", "-hide", "25")
+    args('api/0.txt', "${project.docsDir}/release/api.txt")
+    args("api/removed.txt", "${project.docsDir}/release/removed.txt")
+}
+
