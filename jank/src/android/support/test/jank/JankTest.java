@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface JankTest {
-
-    /** The type of jank to measure */
-    JankType type();
 
     /** The minimum number of frames expected */
     int expectedFrames();
@@ -59,8 +56,10 @@ public @interface JankTest {
     /**
      * Alternate method to execute after all iterations have completed.
      * <p>
-     * <b>Important:</b> the annotated method must take a parameter of type {@link JankMetrics}.
-     * See {@link JankTestBase#afterTest(JankMetrics)}
-     * */
+     * <b>Important:</b> the annotated method must take a parameter of type
+     * {@link android.os.Bundle}.</p>
+     *
+     * @see JankTestBase#afterTest(android.os.Bundle)
+     */
     String afterTest() default "afterTest";
 }
