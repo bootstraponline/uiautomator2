@@ -35,8 +35,6 @@ public class By {
 
     /**
      * Constructs a new {@link BySelector} and copies the criteria from {@code original}.
-     *
-     * @see BySelector#BySelector(BySelector)
      */
     public static BySelector copy(BySelector original) {
         return new BySelector(original);
