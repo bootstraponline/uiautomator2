@@ -16,17 +16,13 @@
 
 package android.support.test.jank;
 
-/**
- * {@link JankMetrics} contains aggregated {@link JankResult} after looped execution of a test case.
- *
- */
-public class JankMetrics {
-    /** average number of jank across iterations */
-    public double averageJank;
-    /** max jank number among all iterations */
-    public int maxJank;
-    /** average FPS across iterations */
-    public double averageFps;
-    /** average of longest frame duration reported from all frames rendered for each iteration */
-    public double averageMaxFrameDuration;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/** Annotation used to configure a window animation frame monitor. */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface WindowAnimationFrameStatsMonitor {
 }

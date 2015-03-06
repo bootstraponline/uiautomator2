@@ -20,12 +20,15 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.jank.internal.JankMonitorFactory;
+import android.support.test.jank.internal.JankMonitor;
 import android.support.test.runner.AndroidJUnitRunner;
 import android.test.InstrumentationTestCase;
 import android.test.InstrumentationTestRunner;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  * Base test class for measuring Jank.
@@ -70,14 +73,9 @@ public class JankTestBase extends InstrumentationTestCase {
      * <p>Note: default implementation reports the aggregated jank metrics via
      * {@link Instrumentation#sendStatus(int, Bundle)}
      * @param metrics the aggregated jank metrics after looped execution
-     * */
-    public void afterTest(JankMetrics metrics) throws Exception {
-        Bundle status = new Bundle();
-        status.putDouble(KEY_AVG_JANK, metrics.averageJank);
-        status.putInt(KEY_MAX_JANK, metrics.maxJank);
-        status.putDouble(KEY_AVG_FPS, metrics.averageFps);
-        status.putDouble(KEY_AVG_MAX_FRAME_DURATION, metrics.averageMaxFrameDuration);
-        getInstrumentation().sendStatus(Activity.RESULT_OK, status);
+     */
+    public void afterTest(Bundle metrics) {
+        getInstrumentation().sendStatus(Activity.RESULT_OK, metrics);
     }
 
     /** Return the index of the currently executing iteration. */
@@ -96,14 +94,10 @@ public class JankTestBase extends InstrumentationTestCase {
         Method afterLoop  = resolveMethod(annotation.afterLoop());
         Method afterTest  = resolveAfterTest(annotation.afterTest());
 
-        // Get a JankUtil instance
-        JankUtil jank = JankUtil.getInstance(getInstrumentation());
-
-        // Stats to track
-        int sumJankyFrames = 0;
-        int maxJankyFrames = 0;
-        double sumFps = 0.0f;
-        double sumLongestFrame = 0.0f;
+        // Get the appropriate JankMonitors for the test type
+        JankMonitorFactory factory = new JankMonitorFactory(getInstrumentation().getUiAutomation());
+        List<JankMonitor> monitors = factory.getJankMonitors(testMethod);
+        assertTrue("No monitors configured for this test", monitors.size() > 0);
 
         // Test setup
         beforeTest.invoke(this, (Object[])null);
@@ -116,36 +110,32 @@ public class JankTestBase extends InstrumentationTestCase {
             beforeLoop.invoke(this, (Object[])null);
 
             // Start monitoring jank
-            jank.startMonitor(annotation.type());
+            for (JankMonitor monitor : monitors) {
+                monitor.startIteration();
+            }
 
             // Run the test method
             testMethod.invoke(this, (Object[])null);
 
             // Stop monitoring
-            JankResult result = jank.stopMonitor();
+            for (JankMonitor monitor : monitors) {
+                int numFrames = monitor.stopIteration();
 
-            // Fail the test if we didn't get enough frames
-            assertTrue(String.format("Too few frames received. Expected: %d, Received: %d.",
-                    annotation.expectedFrames(), result.numFrames),
-                    result.numFrames >= annotation.expectedFrames());
-
-            // Update stats
-            sumJankyFrames += result.numJanky;
-            maxJankyFrames = Math.max(maxJankyFrames, result.numJanky);
-            sumFps += result.fps;
-            sumLongestFrame += result.longestFrameNormalized;
+                // Fail the test if we didn't get enough frames
+                assertTrue(String.format("Too few frames received. Expected: %d, Received: %d.",
+                        annotation.expectedFrames(), numFrames),
+                        numFrames >= annotation.expectedFrames());
+            }
 
             // Loop tear down
             afterLoop.invoke(this, (Object[])null);
         }
 
         // Report aggregated results
-        JankMetrics metrics = new JankMetrics();
-        metrics.averageJank = (double)sumJankyFrames / iterations;
-        metrics.maxJank = maxJankyFrames;
-        metrics.averageFps = sumFps / iterations;
-        metrics.averageMaxFrameDuration = sumLongestFrame / iterations;
-        // Test tear down and reporting
+        Bundle metrics = new Bundle();
+        for (JankMonitor monitor : monitors) {
+            metrics.putAll(monitor.getMetrics());
+        }
         afterTest.invoke(this, metrics);
     }
 
@@ -177,7 +167,7 @@ public class JankTestBase extends InstrumentationTestCase {
 
         Method method = null;
         try {
-            method = getClass().getMethod(name, JankMetrics.class);
+            method = getClass().getMethod(name, Bundle.class);
         } catch (NoSuchMethodException e) {
             fail("method annotated with JankTest#afterTest has wrong signature");
         }
