@@ -6,7 +6,7 @@ group = 'com.android.support.test.uiautomator'
 version = '2.0.0'
 
 ext {
-    extraVersion = 6
+    extraVersion = 11
     supportRepoOut = new File(buildDir, 'support_repo')
     miscDir = new File(buildDir, 'misc')
 }
