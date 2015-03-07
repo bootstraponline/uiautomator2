@@ -25,4 +25,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface WindowAnimationFrameStatsMonitor {
+    public static final String KEY_AVG_NUM_JANKY = "frame-avg-jank";
+    public static final String KEY_MAX_NUM_JANKY = "frame-max-jank";
+    public static final String KEY_AVG_FPS = "frame-fps";
+    public static final String KEY_AVG_LONGEST_FRAME = "frame-max-frame-duration";
 }

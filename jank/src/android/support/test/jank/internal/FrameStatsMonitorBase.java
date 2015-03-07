@@ -16,7 +16,6 @@
 
 package android.support.test.jank.internal;
 
-import android.os.Bundle;
 import android.util.Log;
 import android.view.FrameStats;
 
@@ -38,35 +37,10 @@ abstract class FrameStatsMonitorBase implements JankMonitor {
     // Maximum normalized frame duration before the frame is considered a pause
     private static final double PAUSE_THRESHOLD = 15.0f;
 
-    // Jank metrics namespace and helper class
-    private static final String MONITOR_PREFIX = "frame";
-    private static final MetricsHelper mMetricsHelper = new MetricsHelper(MONITOR_PREFIX);
-
-    // Key values for the metrics reported by this monitor
-    private static final String KEY_NUM_JANKY = "jank";
-    private static final String KEY_FPS = "fps";
-    private static final String KEY_LONGEST_FRAME = "max-frame-duration";
-
     // Accumulated stats
     ArrayList<Integer> mJankyFrames = new ArrayList<Integer>();
     ArrayList<Double> mFps = new ArrayList<Double>();
     ArrayList<Double> mLongestNormalizedFrames = new ArrayList<Double>();
-
-
-    public Bundle getMetrics() {
-        Bundle metrics = new Bundle();
-
-        // Store average and max jank
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_NUM_JANKY, mJankyFrames);
-
-        // Store average fps
-        mMetricsHelper.putAverageMetric(metrics, KEY_FPS, mFps);
-
-        // Store average max frame duration
-        mMetricsHelper.putAverageMetric(metrics, KEY_LONGEST_FRAME, mLongestNormalizedFrames);
-
-        return metrics;
-    }
 
     protected void analyze(FrameStats stats) {
         int frameCount = stats.getFrameCount();

@@ -16,46 +16,23 @@
 
 package android.support.test.jank.internal;
 
-import android.os.Bundle;
-import android.text.TextUtils;
-
 import java.util.List;
 
 class MetricsHelper {
 
-    private static final String KEY_SEPARATOR = "-";
-    private static final String MAX_VALUE_PREFIX = "max";
-    private static final String AVG_VALUE_PREFIX = "avg";
-
-    private final String mMonitorPrefix;
-
-    public MetricsHelper(String monitorPrefix) {
-        mMonitorPrefix = monitorPrefix;
-    }
-
-    /** Stores the average metric for the given set of values. */
-    public void putAverageMetric(Bundle metrics, String key, List<Double> values) {
+    public static double computeAverageFloat(List<Double> values) {
         double sum = 0.0f;
         for (Double value : values) {
             sum += value;
         }
-        metrics.putDouble(joinKey(mMonitorPrefix, MAX_VALUE_PREFIX, key), sum / values.size());
+        return sum / values.size();
     }
 
-    /** Stores the average and max metrics for the given set of values. */
-    public void putSummaryMetrics(Bundle metrics, String key, List<Integer> values) {
-        int max = -1;
-        int sum = 0;
+    public static double computeAverageInt(List<Integer> values) {
+        double sum = 0.0f;
         for (Integer value : values) {
-            max = Math.max(max, value);
             sum += value;
         }
-        metrics.putInt(joinKey(mMonitorPrefix, MAX_VALUE_PREFIX, key), max);
-        metrics.putDouble(joinKey(mMonitorPrefix, AVG_VALUE_PREFIX, key),
-                (double)sum / values.size());
-    }
-
-    private String joinKey(String... parts) {
-        return TextUtils.join(KEY_SEPARATOR, parts);
+        return sum / values.size();
     }
 }

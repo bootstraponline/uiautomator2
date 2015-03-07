@@ -27,4 +27,17 @@ import java.lang.annotation.Target;
 public @interface GfxMonitor {
     /** The name of the process to monitor */
     String processName();
+
+    public static final String KEY_AVG_NUM_JANKY = "gfx-avg-jank";
+    public static final String KEY_MAX_NUM_JANKY = "gfx-max-jank";
+    public static final String KEY_AVG_MISSED_VSYNC = "gfx-avg-missed-vsync";
+    public static final String KEY_MAX_MISSED_VSYNC = "gfx-max-missed-vsync";
+    public static final String KEY_AVG_HIGH_INPUT_LATENCY = "gfx-avg-high-input-latency";
+    public static final String KEY_MAX_HIGH_INPUT_LATENCY = "gfx-max-high-input-latency";
+    public static final String KEY_AVG_SLOW_UI_THREAD = "gfx-avg-slow-ui-thread";
+    public static final String KEY_MAX_SLOW_UI_THREAD = "gfx-max-slow-ui-thread";
+    public static final String KEY_AVG_SLOW_BITMAP_UPLOADS = "gfx-avg-slow-bitmap-uploads";
+    public static final String KEY_MAX_SLOW_BITMAP_UPLOADS = "gfx-max-slow-bitmap-uploads";
+    public static final String KEY_AVG_SLOW_DRAW = "gfx-avg-slow-draw";
+    public static final String KEY_MAX_SLOW_DRAW = "gfx-max-slow-draw";
 }

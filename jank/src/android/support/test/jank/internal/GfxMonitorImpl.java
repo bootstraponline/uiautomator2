@@ -19,12 +19,13 @@ package android.support.test.jank.internal;
 import android.app.UiAutomation;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.support.test.jank.GfxMonitor;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -38,18 +39,6 @@ import junit.framework.Assert;
  * can lead to dropped frames.
  */
 class GfxMonitorImpl implements JankMonitor {
-
-    // Jank metrics namespace and helper class
-    private static final String MONITOR_PREFIX = "gfx";
-    private static final MetricsHelper mMetricsHelper = new MetricsHelper(MONITOR_PREFIX);
-
-    // Key values for the metrics reported by this monitor
-    private static final String KEY_NUM_JANKY = "jank";
-    private static final String KEY_MISSED_VSYNC = "missed-vsync";
-    private static final String KEY_HIGH_INPUT_LATENCY = "high-input-latency";
-    private static final String KEY_SLOW_UI_THREAD = "slow-ui-thread";
-    private static final String KEY_SLOW_BITMAP_UPLOADS = "slow-bitmap-uploads";
-    private static final String KEY_SLOW_DRAW = "slow-draw";
 
     // Patterns used for parsing dumpsys gfxinfo output
     private static final Pattern TOTAL_FRAMES_PATTERN =
@@ -173,12 +162,35 @@ class GfxMonitorImpl implements JankMonitor {
 
     public Bundle getMetrics() {
         Bundle metrics = new Bundle();
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_NUM_JANKY, jankyFrames);
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_MISSED_VSYNC, missedVsync);
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_HIGH_INPUT_LATENCY, highInputLatency);
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_SLOW_UI_THREAD, slowUiThread);
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_SLOW_BITMAP_UPLOADS, slowBitmapUploads);
-        mMetricsHelper.putSummaryMetrics(metrics, KEY_SLOW_DRAW, slowDraw);
+
+        // Store average and max jank
+        metrics.putDouble(GfxMonitor.KEY_AVG_NUM_JANKY,
+                MetricsHelper.computeAverageInt(jankyFrames));
+        metrics.putInt(GfxMonitor.KEY_MAX_NUM_JANKY, Collections.max(jankyFrames));
+
+        // Store average and max missed vsync
+        metrics.putDouble(GfxMonitor.KEY_AVG_MISSED_VSYNC,
+                MetricsHelper.computeAverageInt(missedVsync));
+        metrics.putInt(GfxMonitor.KEY_MAX_MISSED_VSYNC, Collections.max(missedVsync));
+
+        // Store average and max high input latency
+        metrics.putDouble(GfxMonitor.KEY_AVG_HIGH_INPUT_LATENCY,
+                MetricsHelper.computeAverageInt(highInputLatency));
+        metrics.putInt(GfxMonitor.KEY_MAX_HIGH_INPUT_LATENCY, Collections.max(highInputLatency));
+
+        // Store average and max slow ui thread
+        metrics.putDouble(GfxMonitor.KEY_AVG_SLOW_UI_THREAD,
+                MetricsHelper.computeAverageInt(slowUiThread));
+        metrics.putInt(GfxMonitor.KEY_MAX_SLOW_UI_THREAD, Collections.max(slowUiThread));
+
+        // Store average and max slow bitmap uploads
+        metrics.putDouble(GfxMonitor.KEY_AVG_SLOW_BITMAP_UPLOADS,
+                MetricsHelper.computeAverageInt(slowUiThread));
+        metrics.putInt(GfxMonitor.KEY_MAX_SLOW_BITMAP_UPLOADS, Collections.max(slowUiThread));
+
+        // Store average and max slow draw
+        metrics.putDouble(GfxMonitor.KEY_AVG_SLOW_DRAW, MetricsHelper.computeAverageInt(slowDraw));
+        metrics.putInt(GfxMonitor.KEY_MAX_SLOW_DRAW, Collections.max(slowDraw));
 
         return metrics;
     }

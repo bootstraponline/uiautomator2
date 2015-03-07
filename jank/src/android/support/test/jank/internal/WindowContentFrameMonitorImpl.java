@@ -18,10 +18,14 @@ package android.support.test.jank.internal;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.UiAutomation;
+import android.os.Bundle;
+import android.support.test.jank.WindowContentFrameStatsMonitor;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityWindowInfo;
 import android.view.FrameStats;
+
+import java.util.Collections;
 
 /**
  * Monitors {@link android.view.WindowContentFrameStats} to detect janky frames.
@@ -37,6 +41,26 @@ class WindowContentFrameStatsMonitorImpl extends FrameStatsMonitorBase {
 
     public WindowContentFrameStatsMonitorImpl(UiAutomation automation) {
         mUiAutomation = automation;
+    }
+
+    public Bundle getMetrics() {
+        Bundle metrics = new Bundle();
+
+        // Store average and max jank
+        metrics.putDouble(WindowContentFrameStatsMonitor.KEY_AVG_NUM_JANKY,
+                MetricsHelper.computeAverageInt(mJankyFrames));
+        metrics.putInt(WindowContentFrameStatsMonitor.KEY_MAX_NUM_JANKY,
+                Collections.max(mJankyFrames));
+
+        // Store average fps
+        metrics.putDouble(WindowContentFrameStatsMonitor.KEY_AVG_FPS,
+                MetricsHelper.computeAverageFloat(mFps));
+
+        // Store average max frame duration
+        metrics.putDouble(WindowContentFrameStatsMonitor.KEY_AVG_LONGEST_FRAME,
+                MetricsHelper.computeAverageFloat(mLongestNormalizedFrames));
+
+        return metrics;
     }
 
     @Override
