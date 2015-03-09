@@ -55,6 +55,12 @@ class GfxMonitorImpl implements JankMonitor {
             Pattern.compile("\\s*Number Slow bitmap uploads: (\\d+)");
     private static final Pattern SLOW_DRAW_PATTERN =
             Pattern.compile("\\s*Number Slow draw: (\\d+)");
+    private static final Pattern FRAME_TIME_90TH_PERCENTILE_PATTERN =
+            Pattern.compile("\\s*90th percentile: (\\d+)ms");
+    private static final Pattern FRAME_TIME_95TH_PERCENTILE_PATTERN =
+            Pattern.compile("\\s*95th percentile: (\\d+)ms");
+    private static final Pattern FRAME_TIME_99TH_PERCENTILE_PATTERN =
+            Pattern.compile("\\s*99th percentile: (\\d+)ms");
 
     // Used to invoke dumpsys gfxinfo
     private UiAutomation mUiAutomation;
@@ -67,6 +73,9 @@ class GfxMonitorImpl implements JankMonitor {
     private List<Integer> slowUiThread = new ArrayList<Integer>();
     private List<Integer> slowBitmapUploads = new ArrayList<Integer>();
     private List<Integer> slowDraw = new ArrayList<Integer>();
+    private List<Integer> frameTime90thPercentile = new ArrayList<Integer>();
+    private List<Integer> frameTime95thPercentile = new ArrayList<Integer>();
+    private List<Integer> frameTime99thPercentile = new ArrayList<Integer>();
 
 
     public GfxMonitorImpl(UiAutomation automation, String process) {
@@ -108,6 +117,9 @@ class GfxMonitorImpl implements JankMonitor {
         // Frame stats:
         //   Total frames rendered: ###
         //   Janky frames: ### (##.##%)
+        //   90th percentile: ##ms
+        //   95th percentile: ##ms
+        //   99th percentile: ##ms
         //    Number Missed Vsync: #
         //    Number High input latency: #
         //    Number Slow UI thread: #
@@ -126,6 +138,24 @@ class GfxMonitorImpl implements JankMonitor {
             Assert.fail("Failed to parse janky frames");
         }
         jankyFrames.add(Integer.parseInt(part));
+
+        // Get 90th percentile
+        if ((part = getMatchGroup(stream.readLine(), FRAME_TIME_90TH_PERCENTILE_PATTERN, 1)) == null) {
+            Assert.fail("Failed to parse 90th percentile");
+        }
+        frameTime90thPercentile.add(Integer.parseInt(part));
+
+        // Get 95th percentile
+        if ((part = getMatchGroup(stream.readLine(), FRAME_TIME_95TH_PERCENTILE_PATTERN, 1)) == null) {
+            Assert.fail("Failed to parse 95th percentile");
+        }
+        frameTime95thPercentile.add(Integer.parseInt(part));
+
+        // Get 99th percentile
+        if ((part = getMatchGroup(stream.readLine(), FRAME_TIME_99TH_PERCENTILE_PATTERN, 1)) == null) {
+            Assert.fail("Failed to parse 99th percentile");
+        }
+        frameTime99thPercentile.add(Integer.parseInt(part));
 
         // Get Missed Vsync
         if ((part = getMatchGroup(stream.readLine(), MISSED_VSYNC_PATTERN, 1)) == null) {
@@ -167,6 +197,20 @@ class GfxMonitorImpl implements JankMonitor {
         metrics.putDouble(GfxMonitor.KEY_AVG_NUM_JANKY,
                 MetricsHelper.computeAverageInt(jankyFrames));
         metrics.putInt(GfxMonitor.KEY_MAX_NUM_JANKY, Collections.max(jankyFrames));
+
+        // Store average and max percentile frame times
+        metrics.putDouble(GfxMonitor.KEY_AVG_FRAME_TIME_90TH_PERCENTILE,
+                MetricsHelper.computeAverageInt(frameTime90thPercentile));
+        metrics.putInt(GfxMonitor.KEY_MAX_FRAME_TIME_90TH_PERCENTILE,
+                Collections.max(frameTime90thPercentile));
+        metrics.putDouble(GfxMonitor.KEY_AVG_FRAME_TIME_95TH_PERCENTILE,
+                MetricsHelper.computeAverageInt(frameTime95thPercentile));
+        metrics.putInt(GfxMonitor.KEY_MAX_FRAME_TIME_95TH_PERCENTILE,
+                Collections.max(frameTime95thPercentile));
+        metrics.putDouble(GfxMonitor.KEY_AVG_FRAME_TIME_99TH_PERCENTILE,
+                MetricsHelper.computeAverageInt(frameTime99thPercentile));
+        metrics.putInt(GfxMonitor.KEY_MAX_FRAME_TIME_99TH_PERCENTILE,
+                Collections.max(frameTime99thPercentile));
 
         // Store average and max missed vsync
         metrics.putDouble(GfxMonitor.KEY_AVG_MISSED_VSYNC,

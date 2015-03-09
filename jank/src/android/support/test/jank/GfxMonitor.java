@@ -40,4 +40,10 @@ public @interface GfxMonitor {
     public static final String KEY_MAX_SLOW_BITMAP_UPLOADS = "gfx-max-slow-bitmap-uploads";
     public static final String KEY_AVG_SLOW_DRAW = "gfx-avg-slow-draw";
     public static final String KEY_MAX_SLOW_DRAW = "gfx-max-slow-draw";
+    public static final String KEY_AVG_FRAME_TIME_90TH_PERCENTILE = "gfx-avg-frame-time-90";
+    public static final String KEY_MAX_FRAME_TIME_90TH_PERCENTILE = "gfx-max-frame-time-90";
+    public static final String KEY_AVG_FRAME_TIME_95TH_PERCENTILE = "gfx-avg-frame-time-95";
+    public static final String KEY_MAX_FRAME_TIME_95TH_PERCENTILE = "gfx-max-frame-time-95";
+    public static final String KEY_AVG_FRAME_TIME_99TH_PERCENTILE = "gfx-avg-frame-time-99";
+    public static final String KEY_MAX_FRAME_TIME_99TH_PERCENTILE = "gfx-max-frame-time-99";
 }
