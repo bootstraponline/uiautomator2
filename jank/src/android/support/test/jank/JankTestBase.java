@@ -44,11 +44,6 @@ import java.util.List;
  */
 public class JankTestBase extends InstrumentationTestCase {
 
-    public static final String KEY_AVG_JANK = "avg-jank";
-    public static final String KEY_MAX_JANK = "max-jank";
-    public static final String KEY_AVG_FPS = "avg-fps";
-    public static final String KEY_AVG_MAX_FRAME_DURATION = "avg-max-frame-duration";
-
     private Bundle arguments = null;
     private int mCurrentIteration = 0;
 
