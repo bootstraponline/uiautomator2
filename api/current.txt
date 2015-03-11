@@ -143,6 +143,7 @@ package android.support.test.uiautomator {
     method public boolean click(int, int);
     method public boolean drag(int, int, int, int, int);
     method public void dumpWindowHierarchy(java.lang.String);
+    method public java.lang.String executeShellCommand(java.lang.String) throws java.io.IOException;
     method public android.support.test.uiautomator.UiObject findObject(android.support.test.uiautomator.UiSelector);
     method public android.support.test.uiautomator.UiObject2 findObject(android.support.test.uiautomator.BySelector);
     method public java.util.List<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
@@ -156,6 +157,7 @@ package android.support.test.uiautomator {
     method public static deprecated android.support.test.uiautomator.UiDevice getInstance();
     method public static android.support.test.uiautomator.UiDevice getInstance(android.app.Instrumentation);
     method public java.lang.String getLastTraversedText();
+    method public java.lang.String getLauncherPackageName();
     method public java.lang.String getProductName();
     method public boolean hasAnyWatcherTriggered();
     method public boolean hasObject(android.support.test.uiautomator.BySelector);

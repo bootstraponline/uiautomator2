@@ -19,8 +19,13 @@ package android.support.test.uiautomator;
 import android.app.Instrumentation;
 import android.app.UiAutomation;
 import android.app.UiAutomation.AccessibilityEventFilter;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
@@ -32,10 +37,11 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -62,6 +68,9 @@ public class UiDevice implements Searchable {
     // provides access the {@link QueryController} and {@link InteractionController}
     private InstrumentationUiAutomatorBridge mUiAutomationBridge;
 
+    /** keep a reference of {@link Instrumentation} instance*/
+    private Instrumentation mInstrumentation;
+
     // Singleton instance
     private static UiDevice sInstance;
 
@@ -87,6 +96,7 @@ public class UiDevice implements Searchable {
 
     /** Private constructor. Clients should use {@link UiDevice#getInstance(Context)}. */
     private UiDevice(Instrumentation instrumentation) {
+        mInstrumentation = instrumentation;
         mUiAutomationBridge = new InstrumentationUiAutomatorBridge(
                 instrumentation.getContext(),
                 instrumentation.getUiAutomation());
@@ -196,9 +206,9 @@ public class UiDevice implements Searchable {
     /** Proxy class which acts as an {@link AccessibilityEventFilter} and forwards calls to an
      * {@link EventCondition} instance. */
     private static class EventForwardingFilter implements AccessibilityEventFilter {
-        private EventCondition mCondition;
+        private EventCondition<?> mCondition;
 
-        public EventForwardingFilter(EventCondition condition) {
+        public EventForwardingFilter(EventCondition<?> condition) {
             mCondition = condition;
         }
 
@@ -575,7 +585,7 @@ public class UiDevice implements Searchable {
      * @param endX X-axis value for the ending coordinate
      * @param endY Y-axis value for the ending coordinate
      * @param steps is the number of steps for the swipe action
-     * @return true if swipe is performed, false if the operation fails 
+     * @return true if swipe is performed, false if the operation fails
      * or the coordinates are invalid
      * @since API Level 18
      */
@@ -986,5 +996,44 @@ public class UiDevice implements Searchable {
     public boolean takeScreenshot(File storePath, float scale, int quality) {
         Tracer.trace(storePath, scale, quality);
         return getAutomatorBridge().takeScreenshot(storePath, quality);
+    }
+
+    /**
+     * Retrieves default launcher package name
+     *
+     * @return package name of the default launcher
+     */
+    public String getLauncherPackageName() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        PackageManager pm = mInstrumentation.getContext().getPackageManager();
+        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return resolveInfo.activityInfo.packageName;
+    }
+
+    /**
+     * Executes a shell command using shell user identity, and return the standard output in string.
+     * <p>
+     * Calling function with large amount of output will have memory impacts, and the function call
+     * will block if the command executed is blocking.
+     * <p>Note: calling this function requires API level 21 or above
+     * @param instrumentation {@link Instrumentation} instance, obtained from a test running in
+     * instrumentation framework
+     * @param cmd the command to run
+     * @return the standard output of the command
+     * @throws IOException
+     * @since API Level 21
+     */
+    public String executeShellCommand(String cmd) throws IOException {
+        ParcelFileDescriptor pfd = mInstrumentation.getUiAutomation().executeShellCommand(cmd);
+        byte[] buf = new byte[512];
+        int bytesRead;
+        FileInputStream fis = new ParcelFileDescriptor.AutoCloseInputStream(pfd);
+        StringBuffer stdout = new StringBuffer();
+        while ((bytesRead = fis.read(buf)) != -1) {
+            stdout.append(new String(buf, 0, bytesRead));
+        }
+        fis.close();
+        return stdout.toString();
     }
 }
