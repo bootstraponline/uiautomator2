@@ -23,12 +23,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.MotionEvent.PointerCoords;
-import android.view.MotionEvent.PointerProperties;
 import android.view.ViewConfiguration;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -611,15 +608,20 @@ public class UiObject2 implements Searchable {
 
 
     /**
-     * Returns an up-to-date {@link AccessibilityNodeInfo} corresponding to the {@link View} that
+     * Returns an up-to-date {@link AccessibilityNodeInfo} corresponding to the {@link android.view.View} that
      * this object represents.
      */
     private AccessibilityNodeInfo getAccessibilityNodeInfo() {
         if (mCachedNode == null) {
             throw new IllegalStateException("This object has already been recycled");
         }
+
         if (!mCachedNode.refresh()) {
-            throw new StaleObjectException();
+            mDevice.runWatchers();
+
+            if (!mCachedNode.refresh()) {
+                throw new StaleObjectException();
+            }
         }
         return mCachedNode;
     }
