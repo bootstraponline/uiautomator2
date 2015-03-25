@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit;
+package android.support.test.uiautomator.tests;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeoutException;
 
 public class UiObject2Tests extends InstrumentationTestCase {
 
-    private static final String TEST_APP = "android.support.test.uiautomator.tests.unit.testapp";
+    private static final String TEST_APP = "android.support.test.uiautomator.testapp";
 
     private UiDevice mDevice;
 

@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit.testapp;
+package android.support.test.uiautomator.testapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class UiObject2TestClickActivity extends Activity {
+public class UiObject2TestClickAndWaitActivity extends Activity {
 
     private static final String TAG = UiObject2TestClickActivity.class.getSimpleName();
 
@@ -30,10 +31,11 @@ public class UiObject2TestClickActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.uiobject2_testclick_activity);
+        setContentView(R.layout.uiobject2_testclickandwait_activity);
     }
 
-    public void onButtonClick(View v) {
-        ((Button)v).setText("I've been clicked!");
+    public void launchNewWindow(View v) {
+        Intent intent = new Intent(this, UiObject2TestClickAndWaitConfirmActivity.class);
+        startActivity(intent);
     }
 }

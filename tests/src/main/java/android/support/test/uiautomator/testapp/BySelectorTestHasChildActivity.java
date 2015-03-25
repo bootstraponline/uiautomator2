@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit.testapp;
+package android.support.test.uiautomator.testapp;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class BySelectorTestTextActivity extends Activity {
+public class BySelectorTestHasChildActivity extends Activity {
 
-    private static final String TAG = BySelectorTestTextActivity.class.getSimpleName();
+    private static final String TAG = BySelectorTestHasChildActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.byselector_testtext_activity);
+        setContentView(R.layout.byselector_testhaschild_activity);
     }
 }

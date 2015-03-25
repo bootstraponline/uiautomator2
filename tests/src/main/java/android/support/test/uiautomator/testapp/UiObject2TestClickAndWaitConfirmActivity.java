@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit.testapp;
+package android.support.test.uiautomator.testapp;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class BySelectorTestResActivity extends Activity {
+public class UiObject2TestClickAndWaitConfirmActivity extends Activity {
 
-    private static final String TAG = BySelectorTestResActivity.class.getSimpleName();
+    private static final String TAG = UiObject2TestClickActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.byselector_testres_activity);
+        setContentView(R.layout.uiobject2_testclickandwaitconfirm_activity);
     }
 }

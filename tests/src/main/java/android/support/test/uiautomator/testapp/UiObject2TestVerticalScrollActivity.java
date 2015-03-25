@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit.testapp;
+package android.support.test.uiautomator.testapp;
 
 import android.app.Activity;
 import android.graphics.Rect;

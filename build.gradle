@@ -7,6 +7,15 @@ version = '2.0.0'
 android {
     defaultConfig {
         minSdkVersion 18
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
+    sourceSets {
+        androidTest.java.srcDir 'tests/src/androidTest/java/'
     }
 }
 
@@ -16,6 +25,13 @@ configurations {
 
 dependencies {
     doclava project(':doclava')
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+}
+
+afterEvaluate {
+    // The tests run against the testapp and will fail unless the testapp is installed as well.
+    // Make sure the testapp is installed before we run connectedAndroidTest
+    connectedAndroidTest.dependsOn ':uiautomator-testapp:installDebug'
 }
 
 apply from: "../testing/publish.gradle"

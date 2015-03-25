@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit.testapp;
+package android.support.test.uiautomator.testapp;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 
-public class BySelectorTestDescActivity extends Activity {
+public class UiObject2TestGetClassNameActivity extends Activity {
 
-    private static final String TAG = BySelectorTestDescActivity.class.getSimpleName();
+    private static final String TAG = UiObject2TestGetClassNameActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.byselector_testdesc_activity);
-
-        Button button = (Button)findViewById(R.id.button_with_runtime_description);
-        button.setContentDescription("Content Description Set At Runtime");
+        // Reuse layout from BySelectorTestClazz
+        setContentView(R.layout.byselector_testclazz_activity);
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.support.test.uiautomator.tests.unit;
+package android.support.test.uiautomator.tests;
 
 import android.content.Context;
 import android.content.Intent;
@@ -48,7 +48,7 @@ public class BySelectorTests extends InstrumentationTestCase {
 
     private static final String TAG = BySelectorTests.class.getSimpleName();
 
-    private static final String TEST_APP = "android.support.test.uiautomator.tests.unit.testapp";
+    private static final String TEST_APP = "android.support.test.uiautomator.testapp";
     private static final String ANDROID_WIDGET_PACKAGE = "android.widget";
 
     private UiDevice mDevice;
