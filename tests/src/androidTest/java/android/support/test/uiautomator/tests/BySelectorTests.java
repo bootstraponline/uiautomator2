@@ -18,17 +18,13 @@ package android.support.test.uiautomator.tests;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
-import android.test.InstrumentationTestCase;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -37,14 +33,20 @@ import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
-public class BySelectorTests extends InstrumentationTestCase {
+@RunWith(AndroidJUnit4.class)
+public class BySelectorTests {
 
     private static final String TAG = BySelectorTests.class.getSimpleName();
 
@@ -53,15 +55,14 @@ public class BySelectorTests extends InstrumentationTestCase {
 
     private UiDevice mDevice;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
-
-        mDevice = UiDevice.getInstance(getInstrumentation());
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
-    public void launchTestActivity(String activity) throws TimeoutException {
+    public void launchTestActivity(String activity) {
         // Launch the test app
-        Context context = getInstrumentation().getContext();
+        Context context = InstrumentationRegistry.getContext();
         Intent intent = new Intent()
                 .setClassName(TEST_APP, String.format("%s.%s", TEST_APP, activity))
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -71,376 +72,397 @@ public class BySelectorTests extends InstrumentationTestCase {
         mDevice.wait(Until.hasObject(By.pkg(TEST_APP)), 10000);
     }
 
+    @After
     public void tearDown() throws Exception {
         mDevice.pressHome();
 
         // Wait for the activity to disappear
         mDevice.wait(Until.gone(By.pkg(TEST_APP)), 5000);
-
-        super.tearDown();
     }
 
-    public void testCopy() throws TimeoutException {
+    @Test
+    public void testCopy() {
         launchTestActivity("MainActivity");
 
         // Base selector
         BySelector base = By.clazz(".TextView");
 
         // Select various TextView instances
-        assertNotNull(mDevice.findObject(By.copy(base).text("Text View 1")));
-        assertNotNull(mDevice.findObject(By.copy(base).text("Item1")));
-        assertNotNull(mDevice.findObject(By.copy(base).text("Item3")));
+        Assert.assertNotNull(mDevice.findObject(By.copy(base).text("Text View 1")));
+        Assert.assertNotNull(mDevice.findObject(By.copy(base).text("Item1")));
+        Assert.assertNotNull(mDevice.findObject(By.copy(base).text("Item3")));
 
         // Shouldn't be able to select an object that does not match the base
-        assertNull(mDevice.findObject(By.copy(base).text("Accessible button")));
+        Assert.assertNull(mDevice.findObject(By.copy(base).text("Accessible button")));
     }
 
-    public void testClazzButton() throws TimeoutException {
+    @Test
+    public void testClazzButton() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // Button
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "Button")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.Button")));
-        assertNotNull(mDevice.findObject(By.clazz(".Button")));
-        assertNotNull(mDevice.findObject(By.clazz(Button.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "Button")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.Button")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".Button")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(Button.class)));
     }
 
-    public void testClazzCheckBox() throws TimeoutException {
+    @Test
+    public void testClazzCheckBox() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // CheckBox
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "CheckBox")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.CheckBox")));
-        assertNotNull(mDevice.findObject(By.clazz(".CheckBox")));
-        assertNotNull(mDevice.findObject(By.clazz(CheckBox.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "CheckBox")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.CheckBox")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".CheckBox")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(CheckBox.class)));
     }
 
-    public void testClazzEditText() throws TimeoutException {
+    @Test
+    public void testClazzEditText() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // EditText
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "EditText")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.EditText")));
-        assertNotNull(mDevice.findObject(By.clazz(".EditText")));
-        assertNotNull(mDevice.findObject(By.clazz(EditText.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "EditText")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.EditText")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".EditText")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(EditText.class)));
     }
 
-    public void testClazzProgressBar() throws TimeoutException {
+    @Test
+    public void testClazzProgressBar() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // ProgressBar
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "ProgressBar")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.ProgressBar")));
-        assertNotNull(mDevice.findObject(By.clazz(".ProgressBar")));
-        assertNotNull(mDevice.findObject(By.clazz(ProgressBar.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "ProgressBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.ProgressBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".ProgressBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(ProgressBar.class)));
     }
 
-    public void testClazzRadioButton() throws TimeoutException {
+    @Test
+    public void testClazzRadioButton() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // RadioButton
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "RadioButton")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.RadioButton")));
-        assertNotNull(mDevice.findObject(By.clazz(".RadioButton")));
-        assertNotNull(mDevice.findObject(By.clazz(RadioButton.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "RadioButton")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.RadioButton")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".RadioButton")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(RadioButton.class)));
     }
 
-    public void testClazzRatingBar() throws TimeoutException {
+    @Test
+    public void testClazzRatingBar() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // RatingBar
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "RatingBar")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.RatingBar")));
-        assertNotNull(mDevice.findObject(By.clazz(".RatingBar")));
-        assertNotNull(mDevice.findObject(By.clazz(RatingBar.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "RatingBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.RatingBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".RatingBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(RatingBar.class)));
     }
 
-    public void testClazzSeekBar() throws TimeoutException {
+    @Test
+    public void testClazzSeekBar() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // SeekBar
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "SeekBar")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.SeekBar")));
-        assertNotNull(mDevice.findObject(By.clazz(".SeekBar")));
-        assertNotNull(mDevice.findObject(By.clazz(SeekBar.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "SeekBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.SeekBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".SeekBar")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(SeekBar.class)));
     }
 
-    public void testClazzSwitch() throws TimeoutException {
+    @Test
+    public void testClazzSwitch() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // Switch
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "Switch")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.Switch")));
-        assertNotNull(mDevice.findObject(By.clazz(".Switch")));
-        assertNotNull(mDevice.findObject(By.clazz(Switch.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "Switch")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.Switch")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".Switch")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(Switch.class)));
     }
 
-    /* TextClock (Bug: TextClock does not report its correct class name)
-    public void testClazzTextClock() throws TimeoutException {
-        launchTestActivity("BySelectorTestClazzActivity");
-
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "TextClock")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.TextClock")));
-        assertNotNull(mDevice.findObject(By.clazz(".TextClock")));
-        assertNotNull(mDevice.findObject(By.clazz(TextClock.class)));
-    }*/
-
-    public void testClazzTextView() throws TimeoutException {
+    @Test
+    public void testClazzTextView() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // TextView
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "TextView")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.TextView")));
-        assertNotNull(mDevice.findObject(By.clazz(".TextView")));
-        assertNotNull(mDevice.findObject(By.clazz(TextView.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "TextView")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.TextView")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".TextView")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(TextView.class)));
     }
 
-    public void testClazzToggleButton() throws TimeoutException {
+    @Test
+    public void testClazzToggleButton() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // ToggleButton
-        assertNotNull(mDevice.findObject(By.clazz("android.widget", "ToggleButton")));
-        assertNotNull(mDevice.findObject(By.clazz("android.widget.ToggleButton")));
-        assertNotNull(mDevice.findObject(By.clazz(".ToggleButton")));
-        assertNotNull(mDevice.findObject(By.clazz(ToggleButton.class)));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget", "ToggleButton")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz("android.widget.ToggleButton")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(".ToggleButton")));
+        Assert.assertNotNull(mDevice.findObject(By.clazz(ToggleButton.class)));
     }
 
-    public void testClazzNotFound() throws TimeoutException {
+    @Test
+    public void testClazzNotFound() {
         launchTestActivity("BySelectorTestClazzActivity");
 
         // Non-existant class
-        assertNull(mDevice.findObject(By.clazz("android.widget", "NonExistantClass")));
-        assertNull(mDevice.findObject(By.clazz("android.widget.NonExistantClass")));
-        assertNull(mDevice.findObject(By.clazz(".NonExistantClass")));
+        Assert.assertNull(mDevice.findObject(By.clazz("android.widget", "NonExistantClass")));
+        Assert.assertNull(mDevice.findObject(By.clazz("android.widget.NonExistantClass")));
+        Assert.assertNull(mDevice.findObject(By.clazz(".NonExistantClass")));
     }
 
-    public void testClazzNull() throws TimeoutException {
+    @Test
+    public void testClazzNull() {
         // clazz(String)
         try {
             mDevice.findObject(By.clazz((String)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // clazz(String, String)
         try {
             mDevice.findObject(By.clazz((String)null, "foo"));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         try {
             mDevice.findObject(By.clazz("foo", (String)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // clazz(Class)
         try {
             mDevice.findObject(By.clazz((Class)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // clazz(Pattern)
         try {
             mDevice.findObject(By.clazz((Pattern)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
     }
 
-    // TODO: For clazz:
+    // TODO(allenhair): Implement these for clazz():
     // 1. Custom class
     // 2. Patterns
     // 3. Runtime Widgets
 
-    public void testDescSetFromResource() throws TimeoutException {
+    @Test
+    public void testDescSetFromResource() {
         launchTestActivity("BySelectorTestDescActivity");
 
         // Content Description from resource
-        assertNotNull(mDevice.findObject(By.desc("Content Description Set From Layout")));
+        Assert.assertNotNull(mDevice.findObject(By.desc("Content Description Set From Layout")));
     }
 
-    public void testDescSetAtRuntime() throws TimeoutException {
+    @Test
+    public void testDescSetAtRuntime() {
         launchTestActivity("BySelectorTestDescActivity");
 
         // Content Description set at runtime
-        assertNotNull(mDevice.findObject(By.desc("Content Description Set At Runtime")));
+        Assert.assertNotNull(mDevice.findObject(By.desc("Content Description Set At Runtime")));
     }
 
-    public void testDescNotFound() throws TimeoutException {
+    @Test
+    public void testDescNotFound() {
         launchTestActivity("BySelectorTestDescActivity");
 
         // No element has this content description
-        assertNull(mDevice.findObject(By.desc("No element has this Content Description")));
+        Assert.assertNull(mDevice.findObject(By.desc("No element has this Content Description")));
     }
 
-    public void testDescNull() throws TimeoutException {
+    @Test
+    public void testDescNull() {
         // desc(String)
         try {
-            mDevice.findObject(By.desc((String)null));
-            fail();
+            mDevice.findObject(By.desc((String) null));
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // desc(Pattern)
         try {
             mDevice.findObject(By.desc((Pattern)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
     }
 
-    // TODO: For desc:
+    // TODO(allenhair): Implement these for desc():
     // 1. Patterns
     // 2. Runtime Widgets
 
-    public void testPackage() throws TimeoutException {
+    @Test
+    public void testPackage() {
         launchTestActivity("MainActivity");
 
         // Full match with string argument
-        assertNotNull(mDevice.findObject(By.pkg(TEST_APP)));
+        Assert.assertNotNull(mDevice.findObject(By.pkg(TEST_APP)));
     }
 
-    public void testPkgNull() throws TimeoutException {
+    @Test
+    public void testPkgNull() {
         // pkg(String)
         try {
             mDevice.findObject(By.pkg((String)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // pkg(Pattern)
         try {
             mDevice.findObject(By.pkg((Pattern)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
     }
 
-    public void testResUniqueId() throws TimeoutException {
+    @Test
+    public void testResUniqueId() {
         launchTestActivity("BySelectorTestResActivity");
 
         // Unique ID
-        assertNotNull(mDevice.findObject(By.res(TEST_APP, "unique_id")));
-        assertNotNull(mDevice.findObject(By.res(TEST_APP + ":id/unique_id")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP, "unique_id")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP + ":id/unique_id")));
     }
 
-    public void testResCommonId() throws TimeoutException {
+    @Test
+    public void testResCommonId() {
         launchTestActivity("BySelectorTestResActivity");
 
         // Shared ID
-        assertNotNull(mDevice.findObject(By.res(TEST_APP, "shared_id")));
-        assertNotNull(mDevice.findObject(By.res(TEST_APP + ":id/shared_id")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP, "shared_id")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP + ":id/shared_id")));
         // 1. Make sure we can see all instances
         // 2. Differentiate between matches by other criteria
     }
 
-    public void testResNull() throws TimeoutException {
+    @Test
+    public void testResNull() {
         // res(String)
         try {
             mDevice.findObject(By.res((String)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // res(String, String)
         try {
             mDevice.findObject(By.res((String)null, "foo"));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         try {
             mDevice.findObject(By.res("foo", (String)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // res(Pattern)
         try {
             mDevice.findObject(By.res((Pattern)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
     }
 
-    public void testTextUnique() throws TimeoutException {
+    @Test
+    public void testTextUnique() {
         launchTestActivity("BySelectorTestTextActivity");
 
         // Unique Text
-        assertNotNull(mDevice.findObject(By.text("Unique Text")));
+        Assert.assertNotNull(mDevice.findObject(By.text("Unique Text")));
     }
 
-    public void testTextCommon() throws TimeoutException {
+    @Test
+    public void testTextCommon() {
         launchTestActivity("BySelectorTestTextActivity");
 
         // Common Text
-        assertNotNull(mDevice.findObject(By.text("Common Text")));
-        assertEquals(2, mDevice.findObjects(By.text("Common Text")).size());
+        Assert.assertNotNull(mDevice.findObject(By.text("Common Text")));
+        Assert.assertEquals(2, mDevice.findObjects(By.text("Common Text")).size());
     }
 
-    public void testTextNull() throws TimeoutException {
+    @Test
+    public void testTextNull() {
         // text(String)
         try {
             mDevice.findObject(By.text((String)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
 
         // text(Pattern)
         try {
             mDevice.findObject(By.text((Pattern)null));
-            fail();
+            Assert.fail();
         } catch (NullPointerException e) {}
     }
 
-    public void testHasUniqueChild() throws TimeoutException {
+    @Test
+    public void testHasUniqueChild() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         // Find parent with unique child
         UiObject2 object = mDevice.findObject(By.hasChild(By.res(TEST_APP, "toplevel1_child1")));
-        assertNotNull(object);
+        Assert.assertNotNull(object);
     }
 
-    public void testHasCommonChild() throws TimeoutException {
+    @Test
+    public void testHasCommonChild() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         // Find parent(s) with common child
-        assertNotNull(mDevice.findObject(By.hasChild(By.clazz(".TextView"))));
-        assertEquals(3, mDevice.findObjects(By.hasChild(By.clazz(".TextView"))).size());
+        Assert.assertNotNull(mDevice.findObject(By.pkg(TEST_APP).hasChild(By.clazz(".TextView"))));
+        Assert.assertEquals(3, mDevice.findObjects(By.pkg(TEST_APP).hasChild(By.clazz(".TextView"))).size());
     }
 
-    public void testGetChildren() throws TimeoutException {
+    @Test
+    public void testGetChildren() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         UiObject2 parent = mDevice.findObject(By.res(TEST_APP, "toplevel2"));
-        assertEquals(2, parent.getChildren().size());
+        Assert.assertEquals(2, parent.getChildren().size());
     }
 
-    public void testHasMultipleChildren() throws TimeoutException {
+    @Test
+    public void testHasMultipleChildren() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         // Select parent with multiple hasChild selectors
         UiObject2 object = mDevice.findObject(By
                 .hasChild(By.res(TEST_APP, "toplevel2_child1"))
                 .hasChild(By.res(TEST_APP, "toplevel2_child2")));
-        assertNotNull(object);
+        Assert.assertNotNull(object);
     }
 
-    public void testHasMultipleChildrenCollision() throws TimeoutException {
+    @Test
+    public void testHasMultipleChildrenCollision() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         // Select parent with multiple hasChild selectors, but single child that matches both
         UiObject2 object = mDevice.findObject(By
                 .hasChild(By.res(TEST_APP, "toplevel1_child1"))
                 .hasChild(By.clazz(".TextView")));
-        assertNotNull(object);
+        Assert.assertNotNull(object);
     }
 
-    public void testHasChildThatHasChild() throws TimeoutException {
+    @Test
+    public void testHasChildThatHasChild() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         // Select parent with child that has a child
         UiObject2 object = mDevice.findObject(
                 By.hasChild(By.hasChild(By.res(TEST_APP, "toplevel3_container1_child1"))));
-        assertNotNull(object);
+        Assert.assertNotNull(object);
     }
 
-    public void testHasDescendant() throws TimeoutException {
+    @Test
+    public void testHasDescendant() {
         launchTestActivity("BySelectorTestHasChildActivity");
 
         // Select a LinearLayout that has a unique descendant
         UiObject2 object = mDevice.findObject(By
                 .clazz(".RelativeLayout")
                 .hasDescendant(By.res(TEST_APP, "toplevel3_container1_child1")));
-        assertNotNull(object);
+        Assert.assertNotNull(object);
     }
 }

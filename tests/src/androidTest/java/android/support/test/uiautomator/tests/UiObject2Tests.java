@@ -18,30 +18,35 @@ package android.support.test.uiautomator.tests;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.Direction;
 import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiObject2;
+import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.Until;
-import android.test.InstrumentationTestCase;
-import android.util.Log;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeoutException;
 
-public class UiObject2Tests extends InstrumentationTestCase {
+@RunWith(AndroidJUnit4.class)
+public class UiObject2Tests {
 
     private static final String TEST_APP = "android.support.test.uiautomator.testapp";
 
     private UiDevice mDevice;
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
-
-        mDevice = UiDevice.getInstance(getInstrumentation());
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         mDevice.pressHome();
     }
 
@@ -55,7 +60,7 @@ public class UiObject2Tests extends InstrumentationTestCase {
 
         @Override
         public void run() {
-            Context context = getInstrumentation().getContext();
+            Context context = InstrumentationRegistry.getContext();
             Intent intent = new Intent()
                     .setClassName(TEST_APP, String.format("%s.%s", TEST_APP, mActivity))
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -63,105 +68,108 @@ public class UiObject2Tests extends InstrumentationTestCase {
         }
     }
 
-    public void launchTestActivity(String activity) throws TimeoutException {
+    private void launchTestActivity(String activity) {
         // Launch the test app
         mDevice.performActionAndWait(new LaunchActivityRunnable(activity), Until.newWindow(), 5000);
     }
 
+    @After
     public void tearDown() throws Exception {
         mDevice.pressHome();
 
         // Wait for the activity to disappear
         mDevice.wait(Until.gone(By.pkg(TEST_APP)), 5000);
-
-        super.tearDown();
     }
 
+    /* TODO(allenhair): Implement these tests
     public void testExists() {}
 
     public void testGetChildCount() {}
 
     public void testGetVisibleBounds() {}
+    */
 
+    @Test
     public void testGetClassNameButton() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "button"));
-        assertEquals("android.widget.Button", object.getClassName());
+        Assert.assertEquals("android.widget.Button", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameCheckBox() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "check_box"));
-        assertEquals("android.widget.CheckBox", object.getClassName());
+        Assert.assertEquals("android.widget.CheckBox", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameEditText() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "edit_text"));
-        assertEquals("android.widget.EditText", object.getClassName());
+        Assert.assertEquals("android.widget.EditText", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameProgressBar() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "progress_bar"));
-        assertEquals("android.widget.ProgressBar", object.getClassName());
+        Assert.assertEquals("android.widget.ProgressBar", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameRadioButton() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "radio_button"));
-        assertEquals("android.widget.RadioButton", object.getClassName());
+        Assert.assertEquals("android.widget.RadioButton", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameRatingBar() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "rating_bar"));
-        assertEquals("android.widget.RatingBar", object.getClassName());
+        Assert.assertEquals("android.widget.RatingBar", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameSeekBar() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "seek_bar"));
-        assertEquals("android.widget.SeekBar", object.getClassName());
+        Assert.assertEquals("android.widget.SeekBar", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameSwitch() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "switch_toggle"));
-        assertEquals("android.widget.Switch", object.getClassName());
+        Assert.assertEquals("android.widget.Switch", object.getClassName());
     }
 
-    /* TextClock (Bug: TextClock does not report its correct class name)
-    public void testGetClassNameTextClock() throws UiObjectNotFoundException, TimeoutException {
-        launchTestActivity("UiObject2TestGetClassNameActivity");
-
-        UiObject2 object = mDevice.findObject(By.res(TEST_APP, "text_clock"));
-        assertEquals("android.widget.TextClock", object.getClassName());
-    }
-    */
-
+    @Test
     public void testGetClassNameTextView() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "text_view"));
-        assertEquals("android.widget.TextView", object.getClassName());
+        Assert.assertEquals("android.widget.TextView", object.getClassName());
     }
 
+    @Test
     public void testGetClassNameToggleButton() throws UiObjectNotFoundException, TimeoutException {
         launchTestActivity("UiObject2TestGetClassNameActivity");
 
         UiObject2 object = mDevice.findObject(By.res(TEST_APP, "toggle_button"));
-        assertEquals("android.widget.ToggleButton", object.getClassName());
+        Assert.assertEquals("android.widget.ToggleButton", object.getClassName());
     }
 
+    /* TODO(allenhair): Implement more tests
     public void testGetContentDescription() {}
 
     public void testGetApplicationPackage() {}
@@ -189,35 +197,39 @@ public class UiObject2Tests extends InstrumentationTestCase {
     public void testIsSelected() {}
 
     public void testClearTextField() {}
+    */
 
-    public void testClickButton() throws TimeoutException {
+    @Test
+    public void testClickButton() {
         launchTestActivity("UiObject2TestClickActivity");
 
         // Find the button and verify its initial state
         UiObject2 button = mDevice.findObject(By.res(TEST_APP, "button"));
-        assertEquals("Click Me!", button.getText());
+        Assert.assertEquals("Click Me!", button.getText());
         SystemClock.sleep(1000);
 
         // Click on the button and verify that the text has changed
         button.click();
         button.wait(Until.textEquals("I've been clicked!"), 10000);
-        assertEquals("I've been clicked!", button.getText());
+        Assert.assertEquals("I've been clicked!", button.getText());
     }
 
-    public void testClickCheckBox() throws TimeoutException {
+    @Test
+    public void testClickCheckBox() {
         launchTestActivity("UiObject2TestClickActivity");
 
         // Find the checkbox and verify its initial state
         UiObject2 checkbox = mDevice.findObject(By.res(TEST_APP, "check_box"));
-        assertEquals(false, checkbox.isChecked());
+        Assert.assertEquals(false, checkbox.isChecked());
 
         // Click on the checkbox and verify that it is now checked
         checkbox.click();
         checkbox.wait(Until.checked(true), 10000);
-        assertEquals(true, checkbox.isChecked());
+        Assert.assertEquals(true, checkbox.isChecked());
     }
 
-    public void testClickAndWaitForNewWindow() throws TimeoutException {
+    @Test
+    public void testClickAndWaitForNewWindow() {
         launchTestActivity("UiObject2TestClickAndWaitActivity");
 
         // Click the button and wait for a new window
@@ -225,20 +237,22 @@ public class UiObject2Tests extends InstrumentationTestCase {
         button.clickAndWait(Until.newWindow(), 5000);
     }
 
-    public void testLongClickButton() throws TimeoutException {
+    @Test
+    public void testLongClickButton() {
         launchTestActivity("UiObject2TestLongClickActivity");
 
         // Find the button and verify its initial state
         UiObject2 button = mDevice.findObject(By.res(TEST_APP, "button"));
-        assertEquals("Long Click Me!", button.getText());
+        Assert.assertEquals("Long Click Me!", button.getText());
 
         // Click on the button and verify that the text has changed
         button.longClick();
         button.wait(Until.textEquals("I've been long clicked!"), 10000);
-        assertEquals("I've been long clicked!", button.getText());
+        Assert.assertEquals("I've been long clicked!", button.getText());
     }
 
-    public void testPinchIn100Percent() throws TimeoutException {
+    @Test
+    public void testPinchIn100Percent() {
         launchTestActivity("UiObject2TestPinchActivity");
 
         // Find the area to pinch
@@ -248,7 +262,8 @@ public class UiObject2Tests extends InstrumentationTestCase {
         scaleText.wait(Until.textNotEquals("1.0f"), 1000);
     }
 
-    public void testPinchIn75Percent() throws TimeoutException {
+    @Test
+    public void testPinchIn75Percent() {
         launchTestActivity("UiObject2TestPinchActivity");
 
         // Find the area to pinch
@@ -258,7 +273,8 @@ public class UiObject2Tests extends InstrumentationTestCase {
         scaleText.wait(Until.textNotEquals("1.0f"), 1000);
     }
 
-    public void testPinchIn50Percent() throws TimeoutException {
+    @Test
+    public void testPinchIn50Percent() {
         launchTestActivity("UiObject2TestPinchActivity");
 
         // Find the area to pinch
@@ -268,7 +284,8 @@ public class UiObject2Tests extends InstrumentationTestCase {
         scaleText.wait(Until.textNotEquals("1.0f"), 1000);
     }
 
-    public void testPinchIn25Percent() throws TimeoutException {
+    @Test
+    public void testPinchIn25Percent() {
         launchTestActivity("UiObject2TestPinchActivity");
 
         // Find the area to pinch
@@ -278,11 +295,12 @@ public class UiObject2Tests extends InstrumentationTestCase {
         scaleText.wait(Until.textNotEquals("1.0f"), 1000);
     }
 
-    public void testScrollDown() throws TimeoutException {
+    @Test
+    public void testScrollDown() {
         launchTestActivity("UiObject2TestVerticalScrollActivity");
 
         // Make sure we're at the top
-        assertNotNull(mDevice.findObject(By.res(TEST_APP, "top_text")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP, "top_text")));
 
         UiObject2 scrollView = mDevice.findObject(By.res(TEST_APP, "scroll_view"));
         Rect bounds = scrollView.getVisibleBounds();
@@ -294,13 +312,13 @@ public class UiObject2Tests extends InstrumentationTestCase {
         //while (scrollView.scroll(Direction.DOWN, 1.0f)) {
         //}
         scrollView.scroll(Direction.DOWN, distance);
-        assertNotNull(mDevice.findObject(By.res(TEST_APP, "bottom_text")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP, "bottom_text")));
     }
 
-    public void testScrollDistance() throws TimeoutException {
+    /* TODO(allenhair): Fix this test
+    public void testScrollDistance() {
         launchTestActivity("UiObject2TestVerticalScrollActivity");
 
-        /*
         // Make sure we're at the top
         assertNotNull(mDevice.findObject(By.res(TEST_APP, "top_text")));
         int MARGIN = 1;
@@ -319,14 +337,15 @@ public class UiObject2Tests extends InstrumentationTestCase {
         // Scroll to an element 15000px from the top
         scrollView.scroll(Direction.DOWN, distance);
         assertNotNull(mDevice.findObject(By.res(TEST_APP, "from_top_15000")));
-        */
     }
+    */
 
-    public void testScrollDownToEnd() throws TimeoutException {
+    @Test
+    public void testScrollDownToEnd() {
         launchTestActivity("UiObject2TestVerticalScrollActivity");
 
         // Make sure we're at the top
-        assertNotNull(mDevice.findObject(By.res(TEST_APP, "top_text")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP, "top_text")));
 
         // Scroll as much as we can
         UiObject2 scrollView = mDevice.findObject(By.res(TEST_APP, "scroll_view"));
@@ -334,12 +353,14 @@ public class UiObject2Tests extends InstrumentationTestCase {
         while (scrollView.scroll(Direction.DOWN, 1.0f)) { }
 
         // Make sure we're at the bottom
-        assertNotNull(mDevice.findObject(By.res(TEST_APP, "bottom_text")));
+        Assert.assertNotNull(mDevice.findObject(By.res(TEST_APP, "bottom_text")));
     }
 
+    /* TODO(allenhair): Implement these tests
     public void testSetText() {}
 
     public void testWaitForExists() {}
 
     public void testWaitForGone() {}
+    */
 }
