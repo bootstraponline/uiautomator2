@@ -129,5 +129,5 @@ checkapi_last_error_level_flags :=
 checkapi_current_error_level_flags :=
 
 ###############################################
-# Build tests and jank
-include $(LOCAL_PATH)/tests/Android.mk $(LOCAL_PATH)/jank/Android.mk
+# Build tests
+include $(LOCAL_PATH)/tests/Android.mk
