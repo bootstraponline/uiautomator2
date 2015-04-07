@@ -16,24 +16,20 @@
 
 package android.support.test.uiautomator;
 
-import android.os.Environment;
-import android.os.SystemClock;
 import android.util.Log;
 import android.util.Xml;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.OutputStream;
 
 /**
  *
  * @hide
  */
-public class AccessibilityNodeInfoDumper {
+class AccessibilityNodeInfoDumper {
 
     private static final String LOGTAG = AccessibilityNodeInfoDumper.class.getSimpleName();
     private static final String[] NAF_EXCLUDED_CLASSES = new String[] {
@@ -41,39 +37,20 @@ public class AccessibilityNodeInfoDumper {
             android.widget.ListView.class.getName(), android.widget.TableLayout.class.getName()
     };
 
-    /**
-     * Using {@link AccessibilityNodeInfo} this method will walk the layout hierarchy
-     * and generates an xml dump to the location specified by <code>dumpFile</code>
-     * @param root The root accessibility node.
-     * @param dumpFile The file to dump to.
-     * @param rotation The rotaion of current display
-     * @param width The pixel width of current display
-     * @param height The pixel height of current display
-     */
-    public static void dumpWindowToFile(AccessibilityNodeInfo root, File dumpFile, int rotation,
-            int width, int height) {
-        if (root == null) {
-            return;
-        }
-        final long startTime = SystemClock.uptimeMillis();
-        try {
-            FileWriter writer = new FileWriter(dumpFile);
-            XmlSerializer serializer = Xml.newSerializer();
-            StringWriter stringWriter = new StringWriter();
-            serializer.setOutput(stringWriter);
-            serializer.startDocument("UTF-8", true);
-            serializer.startTag("", "hierarchy");
-            serializer.attribute("", "rotation", Integer.toString(rotation));
-            dumpNodeRec(root, serializer, 0, width, height);
-            serializer.endTag("", "hierarchy");
-            serializer.endDocument();
-            writer.write(stringWriter.toString());
-            writer.close();
-        } catch (IOException e) {
-            Log.e(LOGTAG, "failed to dump window to file", e);
-        }
-        final long endTime = SystemClock.uptimeMillis();
-        Log.w(LOGTAG, "Fetch time: " + (endTime - startTime) + "ms");
+    public static void dumpWindowHierarchy(UiDevice device, OutputStream out) throws IOException {
+        XmlSerializer serializer = Xml.newSerializer();
+        serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+        serializer.setOutput(out, "UTF-8");
+
+        serializer.startDocument("UTF-8", true);
+        serializer.startTag("", "hierarchy"); // TODO(allenhair): Should we use a namespace?
+        serializer.attribute("", "rotation", Integer.toString(device.getDisplayRotation()));
+
+        dumpNodeRec(device.getActiveWindowRoot(), serializer, 0, device.getDisplayWidth(),
+                device.getDisplayHeight());
+
+        serializer.endTag("", "hierarchy");
+        serializer.endDocument();
     }
 
     private static void dumpNodeRec(AccessibilityNodeInfo node, XmlSerializer serializer,int index,

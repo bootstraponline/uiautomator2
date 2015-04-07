@@ -478,10 +478,6 @@ class QueryController {
         return null;
     }
 
-    public AccessibilityNodeInfo getAccessibilityRootNode() {
-        return mUiAutomatorBridge.getRootInActiveWindow();
-    }
-
     /**
      * Last activity to report accessibility events.
      * @deprecated The results returned should be considered unreliable

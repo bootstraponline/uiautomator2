@@ -36,9 +36,12 @@ import android.view.Surface;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -900,24 +903,47 @@ public class UiDevice implements Searchable {
      *
      * @param fileName
      * @since API Level 16
+     * @deprecated Use {@link UiDevice#dumpWindowHierarchy(File)} or
+     *     {@link UiDevice#dumpWindowHierarchy(OutputStream)} instead.
      */
+    @Deprecated
     public void dumpWindowHierarchy(String fileName) {
         Tracer.trace(fileName);
-        AccessibilityNodeInfo root =
-                getAutomatorBridge().getQueryController().getAccessibilityRootNode();
-        if(root != null) {
-            Display display = getAutomatorBridge().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            File dumpFile = new File(fileName);
-            if (!dumpFile.isAbsolute()) {
-                dumpFile = getAutomatorBridge().getContext().getFileStreamPath(fileName);
-            }
-            AccessibilityNodeInfoDumper.dumpWindowToFile(root, dumpFile, display.getRotation(),
-                    size.x, size.y);
-            Log.d(LOG_TAG, String.format("Saved window hierarchy to %s",
-                    dumpFile.getAbsolutePath()));
+
+        File dumpFile = new File(fileName);
+        if (!dumpFile.isAbsolute()) {
+            dumpFile = getAutomatorBridge().getContext().getFileStreamPath(fileName);
         }
+        try {
+            dumpWindowHierarchy(dumpFile);
+        } catch (IOException e) {
+            // Ignore to preserve existing behavior. Ugh.
+        }
+    }
+
+    /**
+     * Dump the current window hierarchy to a {@link java.io.File}.
+     *
+     * @param dest The file in which to store the window hierarchy information.
+     * @throws IOException
+     */
+    public void dumpWindowHierarchy(File dest) throws IOException {
+        OutputStream stream = new BufferedOutputStream(new FileOutputStream(dest));
+        try {
+            dumpWindowHierarchy(new BufferedOutputStream(new FileOutputStream(dest)));
+        } finally {
+            stream.close();
+        }
+    }
+
+    /**
+     * Dump the current window hierarchy to an {@link java.io.OutputStream}.
+     *
+     * @param out The output stream that the window hierarchy information is written to.
+     * @throws IOException
+     */
+    public void dumpWindowHierarchy(OutputStream out) throws IOException {
+        AccessibilityNodeInfoDumper.dumpWindowHierarchy(this, out);
     }
 
     /**
@@ -1017,8 +1043,6 @@ public class UiDevice implements Searchable {
      * Calling function with large amount of output will have memory impacts, and the function call
      * will block if the command executed is blocking.
      * <p>Note: calling this function requires API level 21 or above
-     * @param instrumentation {@link Instrumentation} instance, obtained from a test running in
-     * instrumentation framework
      * @param cmd the command to run
      * @return the standard output of the command
      * @throws IOException
@@ -1035,5 +1059,10 @@ public class UiDevice implements Searchable {
         }
         fis.close();
         return stdout.toString();
+    }
+
+    AccessibilityNodeInfo getActiveWindowRoot() {
+        QueryController qc = getAutomatorBridge().getQueryController();
+        return qc.getRootNode();
     }
 }
