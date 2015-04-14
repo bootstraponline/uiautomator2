@@ -1047,6 +1047,7 @@ public class UiDevice implements Searchable {
      * @return the standard output of the command
      * @throws IOException
      * @since API Level 21
+     * @hide
      */
     public String executeShellCommand(String cmd) throws IOException {
         ParcelFileDescriptor pfd = mInstrumentation.getUiAutomation().executeShellCommand(cmd);

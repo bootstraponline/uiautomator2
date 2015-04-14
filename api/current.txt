@@ -145,7 +145,6 @@ package android.support.test.uiautomator {
     method public deprecated void dumpWindowHierarchy(java.lang.String);
     method public void dumpWindowHierarchy(java.io.File) throws java.io.IOException;
     method public void dumpWindowHierarchy(java.io.OutputStream) throws java.io.IOException;
-    method public java.lang.String executeShellCommand(java.lang.String) throws java.io.IOException;
     method public android.support.test.uiautomator.UiObject findObject(android.support.test.uiautomator.UiSelector);
     method public android.support.test.uiautomator.UiObject2 findObject(android.support.test.uiautomator.BySelector);
     method public java.util.List<android.support.test.uiautomator.UiObject2> findObjects(android.support.test.uiautomator.BySelector);
