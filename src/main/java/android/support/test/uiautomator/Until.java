@@ -358,7 +358,7 @@ public class Until {
     public static EventCondition<Boolean> scrollFinished(final Direction direction) {
         return new EventCondition<Boolean>() {
             private Direction mDirection = direction;
-            private Boolean mResult = false;
+            private Boolean mResult = null;
 
             @Override
             Boolean apply(AccessibilityEvent event) {
@@ -399,12 +399,16 @@ public class Until {
                             throw new IllegalArgumentException("Invalid Direction");
                     }
                 }
-                return mResult;
+
+                // Keep listening for events until the result is set to true (we reached the end)
+                return Boolean.TRUE.equals(mResult);
             }
 
             @Override
             Boolean getResult() {
-                return mResult;
+                // If we didn't recieve any scroll events (mResult == null), assume we're already at
+                // the end and return true.
+                return mResult == null || mResult;
             }
         };
     }

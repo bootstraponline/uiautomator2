@@ -217,7 +217,8 @@ public class UiDevice implements Searchable {
 
         @Override
         public boolean accept(AccessibilityEvent event) {
-            return mCondition.apply(event);
+            // Guard against nulls
+            return Boolean.TRUE.equals(mCondition.apply(event));
         }
     }
 
