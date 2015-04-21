@@ -37,7 +37,7 @@ public class Dump extends Instrumentation {
 
         if (arguments.containsKey("compressed")) {
             String compressed = arguments.getString("compressed");
-            if (!compressed.equalsIgnoreCase("true") && !compressed.equalsIgnoreCase("false)")) {
+            if (!compressed.equalsIgnoreCase("true") && !compressed.equalsIgnoreCase("false")) {
                 throw new IllegalArgumentException("compressed must be either true or false");
             }
             mCompressed = Boolean.parseBoolean(compressed);
