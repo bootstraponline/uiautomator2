@@ -46,9 +46,8 @@ class AccessibilityNodeInfoDumper {
         serializer.startTag("", "hierarchy"); // TODO(allenhair): Should we use a namespace?
         serializer.attribute("", "rotation", Integer.toString(device.getDisplayRotation()));
 
-        for (AccessibilityNodeInfo root : device.getWindowRoots()) {
-            dumpNodeRec(root, serializer, 0, device.getDisplayWidth(), device.getDisplayHeight());
-        }
+        dumpNodeRec(device.getActiveWindowRoot(), serializer, 0, device.getDisplayWidth(),
+                device.getDisplayHeight());
 
         serializer.endTag("", "hierarchy");
         serializer.endDocument();

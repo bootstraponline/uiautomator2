@@ -16,7 +16,6 @@
 
 package android.support.test.uiautomator;
 
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -41,7 +40,7 @@ class ByMatcher {
 
     /**
      * Constructs a new {@link ByMatcher} instance. Used by
-     * {@link ByMatcher#findMatch(UiDevice, BySelector, AccessibilityNodeInfo...)} to store state information
+     * {@link ByMatcher#findMatch(AccessibilityNodeInfo, BySelector)} to store state information
      * that does not change during recursive calls.
      *
      * @param selector The criteria used to determine if a {@link AccessibilityNodeInfo} is a match.
@@ -54,48 +53,37 @@ class ByMatcher {
     }
 
     /**
-     * Traverses the {@link AccessibilityNodeInfo} hierarchy starting at each {@code root} and
-     * returns the first node to match the {@code selector} criteria. <br />
-     * <strong>Note:</strong> The caller must release the {@link AccessibilityNodeInfo} instance by
-     * calling {@link AccessibilityNodeInfo#recycle()} to avoid leaking resources.
+     * Traverses the {@link AccessibilityNodeInfo} hierarchy starting at {@code root}, and returns
+     * the first node to match the {@code selector} criteria. <br />
+     * <strong>Note:</strong> The caller must release the {@link AccessibilityNodeInfo} instance
+     * by calling {@link AccessibilityNodeInfo#recycle()} to avoid leaking resources.
      *
-     * @param device A reference to the {@link UiDevice}.
+     * @param root The root {@link AccessibilityNodeInfo} from which to start the search.
      * @param selector The {@link BySelector} criteria used to determine if a node is a match.
      * @return The first {@link AccessibilityNodeInfo} which matched the search criteria.
      */
-    static AccessibilityNodeInfo findMatch(UiDevice device, BySelector selector,
-            AccessibilityNodeInfo... roots) {
+    static AccessibilityNodeInfo findMatch(UiDevice device, AccessibilityNodeInfo root,
+            BySelector selector) {
 
         // TODO: Don't short-circuit when debugging, and warn if more than one match.
         ByMatcher matcher = new ByMatcher(device, selector, true);
-        for (AccessibilityNodeInfo root : roots) {
-            List<AccessibilityNodeInfo> matches = matcher.findMatches(root);
-            if (!matches.isEmpty()) {
-                return matches.get(0);
-            }
-        }
-        return null;
+        List<AccessibilityNodeInfo> matches = matcher.findMatches(root);
+        return matches.isEmpty() ? null : matches.get(0);
     }
 
     /**
-     * Traverses the {@link AccessibilityNodeInfo} hierarchy starting at each {@code root} and
-     * returns a list of nodes which match the {@code selector} criteria. <br />
+     * Traverses the {@link AccessibilityNodeInfo} hierarchy starting at {@code root}, and returns
+     * a list of nodes which match the {@code selector} criteria. <br />
      * <strong>Note:</strong> The caller must release each {@link AccessibilityNodeInfo} instance
      * by calling {@link AccessibilityNodeInfo#recycle()} to avoid leaking resources.
      *
-     * @param device A reference to the {@link UiDevice}.
+     * @param root The root {@link AccessibilityNodeInfo} from which to start the search.
      * @param selector The {@link BySelector} criteria used to determine if a node is a match.
      * @return A list containing all of the nodes which matched the search criteria.
      */
-    static List<AccessibilityNodeInfo> findMatches(UiDevice device, BySelector selector,
-            AccessibilityNodeInfo... roots) {
-
-        List<AccessibilityNodeInfo> ret = new ArrayList<AccessibilityNodeInfo>();
-        ByMatcher matcher = new ByMatcher(device, selector, false);
-        for (AccessibilityNodeInfo root : roots) {
-            ret.addAll(matcher.findMatches(root));
-        }
-        return ret;
+    static List<AccessibilityNodeInfo> findMatches(UiDevice device, AccessibilityNodeInfo root,
+            BySelector selector) {
+        return new ByMatcher(device, selector, false).findMatches(root);
     }
 
     /**
