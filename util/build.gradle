@@ -1,0 +1,11 @@
+apply plugin: 'android'
+
+android {
+    defaultConfig {
+        minSdkVersion 18
+    }
+}
+
+dependencies {
+    compile project(':uiautomator-v18')
+}

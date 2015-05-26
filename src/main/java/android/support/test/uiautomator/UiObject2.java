@@ -173,7 +173,7 @@ public class UiObject2 implements Searchable {
     /** Returns whether there is a match for the given criteria under this object. */
     public boolean hasObject(BySelector selector) {
         AccessibilityNodeInfo node =
-                ByMatcher.findMatch(mDevice, getAccessibilityNodeInfo(), selector);
+                ByMatcher.findMatch(mDevice, selector, getAccessibilityNodeInfo());
         if (node != null) {
             node.recycle();
             return true;
@@ -186,7 +186,7 @@ public class UiObject2 implements Searchable {
      */
     public UiObject2 findObject(BySelector selector) {
         AccessibilityNodeInfo node =
-                ByMatcher.findMatch(mDevice, getAccessibilityNodeInfo(), selector);
+                ByMatcher.findMatch(mDevice, selector, getAccessibilityNodeInfo());
         return node != null ? new UiObject2(mDevice, selector, node) : null;
     }
 
@@ -194,7 +194,7 @@ public class UiObject2 implements Searchable {
     public List<UiObject2> findObjects(BySelector selector) {
         List<UiObject2> ret = new ArrayList<UiObject2>();
         for (AccessibilityNodeInfo node :
-                ByMatcher.findMatches(mDevice, getAccessibilityNodeInfo(), selector)) {
+                ByMatcher.findMatches(mDevice, selector, getAccessibilityNodeInfo())) {
 
             ret.add(new UiObject2(mDevice, selector, node));
         }
@@ -621,6 +621,7 @@ public class UiObject2 implements Searchable {
             throw new IllegalStateException("This object has already been recycled");
         }
 
+        mDevice.waitForIdle();
         if (!mCachedNode.refresh()) {
             mDevice.runWatchers();
 
