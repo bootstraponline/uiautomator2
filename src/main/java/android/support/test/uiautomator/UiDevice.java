@@ -16,6 +16,7 @@
 
 package android.support.test.uiautomator;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Instrumentation;
 import android.app.UiAutomation;
 import android.app.UiAutomation.AccessibilityEventFilter;
@@ -35,6 +36,7 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityWindowInfo;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -92,17 +94,25 @@ public class UiDevice implements Searchable {
             + ("REL".equals(Build.VERSION.CODENAME) ? 0 : 1);
 
     /**
-     * @deprecated Should use {@link UiDevice#UiDevice(InstrumentationUiAutomatorBridge)} instead.
+     * @deprecated Should use {@link UiDevice#UiDevice(Instrumentation)} instead.
      */
     @Deprecated
     private UiDevice() {}
 
-    /** Private constructor. Clients should use {@link UiDevice#getInstance(Context)}. */
+    /** Private constructor. Clients should use {@link UiDevice#getInstance(Instrumentation)}. */
     private UiDevice(Instrumentation instrumentation) {
         mInstrumentation = instrumentation;
+        UiAutomation uiAutomation = instrumentation.getUiAutomation();
         mUiAutomationBridge = new InstrumentationUiAutomatorBridge(
-                instrumentation.getContext(),
-                instrumentation.getUiAutomation());
+                instrumentation.getContext(), uiAutomation);
+
+        // Enable multi-window support for API level 21 and up
+        if (UiDevice.API_LEVEL_ACTUAL >= Build.VERSION_CODES.LOLLIPOP) {
+            // Subscribe to window information
+            AccessibilityServiceInfo info = uiAutomation.getServiceInfo();
+            info.flags |= AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS;
+            uiAutomation.setServiceInfo(info);
+        }
     }
 
     /**
@@ -141,8 +151,7 @@ public class UiDevice implements Searchable {
 
     /** Returns whether there is a match for the given {@code selector} criteria. */
     public boolean hasObject(BySelector selector) {
-        QueryController qc = getAutomatorBridge().getQueryController();
-        AccessibilityNodeInfo node = ByMatcher.findMatch(this, qc.getRootNode(), selector);
+        AccessibilityNodeInfo node = ByMatcher.findMatch(this, selector, getWindowRoots());
         if (node != null) {
             node.recycle();
             return true;
@@ -152,17 +161,14 @@ public class UiDevice implements Searchable {
 
     /** Returns the first object to match the {@code selector} criteria. */
     public UiObject2 findObject(BySelector selector) {
-        QueryController qc = getAutomatorBridge().getQueryController();
-        AccessibilityNodeInfo node = ByMatcher.findMatch(this, qc.getRootNode(), selector);
+        AccessibilityNodeInfo node = ByMatcher.findMatch(this, selector, getWindowRoots());
         return node != null ? new UiObject2(this, selector, node) : null;
     }
 
     /** Returns all objects that match the {@code selector} criteria. */
     public List<UiObject2> findObjects(BySelector selector) {
         List<UiObject2> ret = new ArrayList<UiObject2>();
-
-        QueryController qc = getAutomatorBridge().getQueryController();
-        for (AccessibilityNodeInfo node : ByMatcher.findMatches(this, qc.getRootNode(), selector)) {
+        for (AccessibilityNodeInfo node : ByMatcher.findMatches(this, selector, getWindowRoots())) {
             ret.add(new UiObject2(this, selector, node));
         }
 
@@ -1063,8 +1069,27 @@ public class UiDevice implements Searchable {
         return stdout.toString();
     }
 
-    AccessibilityNodeInfo getActiveWindowRoot() {
-        QueryController qc = getAutomatorBridge().getQueryController();
-        return qc.getRootNode();
+    /** Returns a list containing the root {@link AccessibilityNodeInfo}s for each active window */
+    AccessibilityNodeInfo[] getWindowRoots() {
+        waitForIdle();
+
+        ArrayList<AccessibilityNodeInfo> ret = new ArrayList<AccessibilityNodeInfo>();
+        // Support multi-window searches for API level 21 and up
+        if (UiDevice.API_LEVEL_ACTUAL >= Build.VERSION_CODES.LOLLIPOP) {
+            for (AccessibilityWindowInfo window : mInstrumentation.getUiAutomation().getWindows()) {
+                AccessibilityNodeInfo root = window.getRoot();
+
+                if (root == null) {
+                    Log.w(LOG_TAG, String.format("Skipping null root node for window: %s",
+                            window.toString()));
+                    continue;
+                }
+                ret.add(root);
+            }
+        // Prior to API level 21 we can only access the active window
+        } else {
+            ret.add(mInstrumentation.getUiAutomation().getRootInActiveWindow());
+        }
+        return ret.toArray(new AccessibilityNodeInfo[ret.size()]);
     }
 }
