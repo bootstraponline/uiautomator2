@@ -1,7 +1,7 @@
 apply plugin: 'android-library'
 
 group = 'com.android.support.test.uiautomator'
-version = '2.1.1'
+version = '2.1.2'
 
 // Android Library configuration
 android {
